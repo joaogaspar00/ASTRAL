@@ -1,0 +1,79 @@
+function [s_t, s_y] = analitic_solver(SIM, TIME, VEHICLE, EARTH, BLADE, ROTOR, AERODAS)
+
+global sim_data;
+
+sim_data.iterationCounter = 1;
+
+vehicle_velocity = VEHICLE.InitVelocity;
+vehicle_position = VEHICLE.InitPosition;
+
+rotor_velocity = ROTOR.InitVelocity;
+rotor_position = ROTOR.InitPosition;
+
+t = 0;
+s_t = [];
+s_y = [];
+
+while vehicle_position(3) > 0
+
+    ATMOSPHERE = atmosphereModel(vehicle_position(3), SIM);
+
+    [F_total, F_rotor, F_gravity, F_drag_cilinder, ~, T_rotor, ~, T_shaft, rotorIsOpen, stall_percentage] ...
+    = compute_forces_torques(t, vehicle_position, vehicle_velocity, rotor_velocity, SIM, VEHICLE, EARTH, BLADE, ROTOR, AERODAS, ATMOSPHERE);
+    
+    I_cilindro = (1/2) * VEHICLE.M * 1^2; % Momento de inércia do cilindro
+    dw = T_rotor / (ROTOR.I_rotor + I_cilindro); % Aceleração angular total
+    
+        
+    % Vehivle dynamics
+    vehicle_acceleration = 1/VEHICLE.M * F_total;
+    vehicle_velocity = vehicle_velocity + vehicle_acceleration * TIME.dt;
+    vehicle_position = vehicle_position + vehicle_velocity * TIME.dt + 1/2 * vehicle_acceleration * (TIME.dt^2);
+    
+    %
+    rotor_acceleration = T_shaft/ROTOR.I_rotor;
+    rotor_velocity = rotor_velocity + rotor_acceleration * TIME.dt;
+    rotor_position = rotor_position + rotor_acceleration * TIME.dt;
+
+    rotor_position = mod(rotor_position, 2*pi);  
+
+    s_t(sim_data.iterationCounter) = t;
+    
+    s_y(sim_data.iterationCounter, 1:3) = vehicle_position;
+    s_y(sim_data.iterationCounter, 4:6) = vehicle_velocity;
+   
+    s_y(sim_data.iterationCounter, 7:9) = [0;0;0];
+    s_y(sim_data.iterationCounter, 10:12) = [0;0;0];
+
+    s_y(sim_data.iterationCounter, 13) = rotor_position;
+    s_y(sim_data.iterationCounter, 14) = rotor_velocity; 
+
+
+    sim_data.height = [sim_data.height; vehicle_position(3)];
+    sim_data.t = [sim_data.t; t];    
+    sim_data.a = [sim_data.a; vehicle_acceleration'];
+    sim_data.dw = [sim_data.dw; dw'];
+    
+    sim_data.rotor_acceleration = [sim_data.rotor_acceleration; rotor_acceleration'];
+    
+    sim_data.rotor_torque = [sim_data.rotor_torque;T_rotor'];
+    
+    sim_data.t_shaft = [sim_data.t_shaft; T_shaft];
+
+    sim_data.stall_percentage = [sim_data.stall_percentage ; stall_percentage];
+    
+    sim_data.F_rotor = [sim_data.F_rotor; F_rotor'];
+    sim_data.F_g = [sim_data.F_g; F_gravity'];
+    sim_data.F_drag_cilinder = [sim_data.F_drag_cilinder; F_drag_cilinder'];
+    sim_data.F_total = [sim_data.F_total; F_total'];
+
+    % UPDATE TIME
+    t = t + TIME.dt;
+    
+    update_progressBar(vehicle_position(3), F_rotor(3), rotor_velocity, VEHICLE, rotorIsOpen)
+    sim_data.iterationCounter = sim_data.iterationCounter + 1;
+
+end
+
+end
+
