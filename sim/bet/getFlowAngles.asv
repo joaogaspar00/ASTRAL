@@ -4,7 +4,7 @@ function [alpha, phi, element_state] = getFlowAngles(U_T, U_P, theta)
 if U_T == 0 && U_P == 0
     phi = 0;
     alpha = 0;
-    element_state = 1;
+    element_state = 0;
     return
 end
 
@@ -16,11 +16,12 @@ else
 end
 
 if U_T > 0
-   alpha = phi + theta;  
+    
 else
-    alpha = 180 + phi + theta;
-end
 
+
+
+alpha = 0;
 element_state = 1;
 
 % 

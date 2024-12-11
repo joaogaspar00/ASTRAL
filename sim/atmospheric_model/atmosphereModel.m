@@ -1,6 +1,6 @@
 function ATMOSPHERE = atmosphereModel (height, SIM)
     
-    global sim_data 
+    % global sim_data 
 
     gamma = 1.4;
     R = 287.053;
@@ -41,10 +41,10 @@ function ATMOSPHERE = atmosphereModel (height, SIM)
     ATMOSPHERE.kinematicViscosity = nu;
     ATMOSPHERE.soundSpeed = a;
 
-    sim_data.temperature = [sim_data.temperature; ATMOSPHERE.temperature];
-    sim_data.pressure = [sim_data.pressure; ATMOSPHERE.pressure];
-    sim_data.density = [sim_data.density; ATMOSPHERE.density];
-    sim_data.dynamicVisvosity = [sim_data.dynamicVisvosity; ATMOSPHERE.dynamicVisvosity];
-    sim_data.kinecticViscosity = [sim_data.kinecticViscosity; ATMOSPHERE.kinematicViscosity];
-    sim_data.soundSpeed = [sim_data.soundSpeed; ATMOSPHERE.soundSpeed];
+    % sim_data.temperature = [sim_data.temperature; ATMOSPHERE.temperature];
+    % sim_data.pressure = [sim_data.pressure; ATMOSPHERE.pressure];
+    % sim_data.density = [sim_data.density; ATMOSPHERE.density];
+    % sim_data.dynamicVisvosity = [sim_data.dynamicVisvosity; ATMOSPHERE.dynamicVisvosity];
+    % sim_data.kinecticViscosity = [sim_data.kinecticViscosity; ATMOSPHERE.kinematicViscosity];
+    % sim_data.soundSpeed = [sim_data.soundSpeed; ATMOSPHERE.soundSpeed];
 end
