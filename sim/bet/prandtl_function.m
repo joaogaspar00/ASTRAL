@@ -3,7 +3,7 @@ function F_prandtl = prandtl_function (phi_root, phi_tip, ROTOR, BLADE)
 phi_root = abs(phi_root * pi / 180);
 phi_tip = abs(phi_tip * pi /180);
 
-r = BLADE.pos_sec./BLADE.Length;
+r = BLADE.pos_sec(:,2) ./BLADE.Span;
 
 f_tip = ROTOR.Nb/2 .* ((1-r)./(r*phi_tip));
 f_root = ROTOR.Nb/2 .* r./((1-r)*phi_root) ;           

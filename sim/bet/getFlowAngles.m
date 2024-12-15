@@ -1,100 +1,59 @@
 function [alpha, phi, element_state] = getFlowAngles(U_T, U_P, theta)
 
-% Rotor estático 
-if U_T == 0 && U_P == 0
+element_state = -1;
+
+
+if U_P == 0 && U_T == 0
+    element_state = 1;
     phi = 0;
     alpha = 0;
-    element_state = 1;
-    return
-end
-
-% Queda axil 
-if U_T == 0 && U_P ~= 0
-    phi = 90;
+elseif U_P == 0 && U_T ~= 0
+    if U_T > 0
+        element_state = 2;
+        phi = 0;
+        alpha = theta;
+    elseif U_T < 0
+        element_state = 3;
+        phi = 180;
+        alpha = theta - phi;
+    end
+elseif U_T == 0 && U_P ~= 0
+    if U_P > 0
+        element_state = 4;
+        phi = 90;
+        alpha = theta - phi; 
+    elseif U_P < 0
+        element_state = 5;
+        phi = -90;
+         alpha = theta - phi;
+    end
 else
-    phi = atand(U_P/U_T);
+
+    phi_ = atand (abs(U_P/U_T));
+ 
+
+    %1º QUADRANTE
+    if U_T < 0 && U_P > 0
+        element_state = 6;
+        phi = 180 - phi_;
+    %2º QUADRANTE
+    elseif U_T > 0 && U_P > 0
+        element_state = 7;
+        phi = 90 - phi_;
+    %3º QUADRANTE
+    elseif U_T > 0 && U_P < 0
+        element_state = 8;
+        phi = -phi_;
+    %4º QUADRANTE
+    elseif U_T < 0 && U_P < 0
+        element_state = 9;
+        phi = -180 + phi_;
+    end
+
+    alpha = theta - phi ;
 end
 
-if U_T > 0
-   alpha = phi + theta;  
-else
-    alpha = 180 + phi + theta;
-end
-
-element_state = 1;
-
-% 
-% if U_T == 0 && abs(U_P) > 0
-% 
-%     phi = -90;
-% 
-%     if theta <= 0
-% 
-%         alpha = abs(phi) - abs(theta);
-% 
-%         element_state = 1;
-% 
-%     elseif theta > 0
-% 
-%         element_state = 5;
-% 
-%         alpha = abs(phi) + abs(theta);   
-% 
-%     else
-%         error("Check angles - 1")
-%     end
-% 
-% elseif U_P == 0
-% 
-%     phi = 0;
-% 
-%     alpha = theta;
-% 
-%     if alpha < 0
-%         element_state = 7;
-%     else 
-%         element_state = 8;
-%     end
-% 
-% else
-% 
-%     phi = - atand(abs(U_P) / abs(U_T));
-% 
-%     % pitch angle negative
-%     if theta < 0
-% 
-%         if abs(phi) > abs(theta)
-% 
-%             alpha = abs(phi) - abs(theta);
-% 
-%             element_state = 2;
-% 
-%         elseif abs(phi) == abs(theta)
-% 
-%             alpha = 0;
-% 
-%             element_state = 3;
-% 
-%         elseif abs(phi) < abs(theta)
-% 
-%             alpha =  - (abs(theta) - abs(phi));
-% 
-%             element_state = 4;
-% 
-%         else
-%             error("Check angles - 2")
-%         end
-% 
-%     % pitch angle positive
-%     elseif theta >= 0
-% 
-%         alpha = abs(theta) + abs(phi);
-% 
-%         element_state = 6;
-% 
-%     else
-%         error("Check angles - 3")
-%     end
-% end
+phi = mod(phi + 180, 360) - 180;
+alpha = mod(alpha + 180, 360) - 180;
 
 end
