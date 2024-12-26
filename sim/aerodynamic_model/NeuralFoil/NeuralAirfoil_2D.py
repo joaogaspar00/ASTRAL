@@ -11,7 +11,7 @@ def NeuralAirfoil_2D (airfoil, Re, Ma, alpha):
         #model_size="xxxlarge",
     )
 
-    aeroCoeff = [float(a["CL"][0]),float(a["CD"][0]), float(a["analysis_confidence"][0])]
+    aeroCoeff = [float(a["CL"][0]),float(a["CD"][0]), float(a["CM"][0]), float(a["analysis_confidence"][0])]
     
     return  aeroCoeff
 

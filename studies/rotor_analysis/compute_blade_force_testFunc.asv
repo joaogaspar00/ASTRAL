@@ -1,4 +1,7 @@
-function [OUTPUTS, Force_blade, Torque_blade] = compute_blade_force_testFunc(OUTPUTS, SIM, TIME, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
+function [OUTPUTS, Force_blade, Torque_blade, stall_percentage, V_tip] = ...
+    compute_blade_force_testFunc(R_b_i, V_b, v_induced, angular_velocity, SIM, OUTPUTS, ROTOR, BLADE, ATMOSPHERE)
+
+
 
 
 % forces and moments vectores
@@ -31,11 +34,11 @@ stallMode = zeros(1, BLADE.No_elements+1);
      
 for i = 0:1:BLADE.No_elements
 
-    VT_e = VEHICLE.velocity_b';
+    VT_e = V_b';
 
-    VR_e = cross(BLADE.pos_sec(i+1, :), VEHICLE.angular_velocity)';
+    VR_e = cross(BLADE.pos_sec(i+1, :), angular_velocity)';
 
-    V_e = VT_e + VR_e + ROTOR.v_induced;
+    V_e = VT_e + VR_e + v_induced;
 
     if i+1 == BLADE.No_elements
         V_tip = V_e;
@@ -100,11 +103,9 @@ for i = 0:1:BLADE.No_elements
     % element force in aerodynamic reference frame
     dF_a(:, i+1) = [dD(i+1); 0; dL(i+1)];
     
-
     % from aerodynamic reference frame to element reference frame
-    Rt_e_a =  rotationMatrix_generator(0, phi(i+1), 0);
-    Rt_e_a = [-1 0 0; 0 1 0; 0 0 1] * Rt_e_a;
-    Rt_a_e = transpose(Rt_e_a);
+    Rt_e_a = [-1 0 0; 0 1 0; 0 0 1] * rotationMatrix_generator(0, 90 - abs(phi(i+1)), 0);
+    Rt_a_e = transpose(Rt_e_a)
     
     % element force in element reference frame
     dF_e(:, i+1) =  Rt_a_e * dF_a(:, i+1);
@@ -121,10 +122,11 @@ end
 
 % df_z_prandtl = df_z .* f_prandtl;
 
+
 dF_b = dF_e;
 
 % converter as forças elementares para o referencial do rotor
-dF = transpose(BLADE.R_b_i * dF_b);
+dF = transpose(R_b_i * dF_b);
     
 f_x = sum(dF(:, 1));
 f_y = sum(dF(:, 2));

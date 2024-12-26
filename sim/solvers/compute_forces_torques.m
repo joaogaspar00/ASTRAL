@@ -1,6 +1,8 @@
 function [F_total, F_rotor, F_gravity, F_drag_cilinder, F_blade, T_rotor, T_blade, T_shaft, rotorIsOpen, stall_percentage] ...
     = compute_forces_torques(t, vehicle_position, vehicle_velocity, rotor_velocity, SIM, VEHICLE, EARTH, BLADE, ROTOR, AERODAS, ATMOSPHERE)
 
+global sim_data
+
 F_blade = zeros(3, ROTOR.Nb);
 T_blade = zeros(3, ROTOR.Nb);
 stall_percentage = zeros(ROTOR.Nb);
@@ -18,7 +20,7 @@ if ROTOR.openRotor == true
 
 
         for current_blade = 1:(ROTOR.Nb)
-            [F_blade(:, current_blade), T_blade(:, current_blade), stall_percentage(current_blade)] = compute_blade_force(t, vehicle_velocity, rotor_velocity, current_blade, SIM, ROTOR, BLADE, AERODAS, ATMOSPHERE);        
+            [F_blade(:, current_blade), T_blade(:, current_blade), stall_percentage(current_blade)] = compute_blade_force(t, vehicle_velocity, rotor_velocity, current_blade, SIM, ROTOR, BLADE,  ATMOSPHERE);        
             
         end
 

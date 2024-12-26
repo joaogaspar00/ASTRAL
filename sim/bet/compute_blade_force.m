@@ -162,53 +162,53 @@ stall_percentage = sum(stallMode)/(BLADE.No_elements + 1);
 
 %--------------------------------------------------------------------------
 
-% if current_blade == 1
-%     lastElement_toSave = length(sim_data.b_df_x(1,1,:))+1;
-% 
-%     sim_data.b_time = [sim_data.b_time, t];
-% else
-%     lastElement_toSave = length(sim_data.b_df_x(1,1,:));
-% end
-% 
-% sim_data.b_df_x(current_blade, :, lastElement_toSave) = df_x;
-% sim_data.b_df_y(current_blade, :, lastElement_toSave) = df_y;
-% sim_data.b_df_z(current_blade, :, lastElement_toSave) = df_z;
-% 
-% sim_data.b_dtau_x(current_blade, :, lastElement_toSave) = dtau_x;
-% sim_data.b_dtau_y(current_blade, :, lastElement_toSave) = dtau_y;
-% sim_data.b_dtau_z(current_blade, :, lastElement_toSave) = dtau_z;
-% 
-% sim_data.b_v_x(current_blade, :, lastElement_toSave) = v_x;
-% sim_data.b_v_y(current_blade, :, lastElement_toSave) = v_y;
-% sim_data.b_v_z(current_blade, :, lastElement_toSave) = v_z;
-% 
-% sim_data.b_ang_v(current_blade, :, lastElement_toSave) = ang_v;
-% sim_data.b_total_v(current_blade, :, lastElement_toSave) = total_v;
-% 
-% sim_data.b_dL(current_blade, :, lastElement_toSave) = dL;
-% sim_data.b_dD(current_blade, :, lastElement_toSave) = dD;
-% 
-% sim_data.b_alpha(current_blade, :, lastElement_toSave) = alpha;
-% sim_data.b_theta(current_blade, :, lastElement_toSave) = BLADE.theta;
-% sim_data.b_phi(current_blade, :, lastElement_toSave) = phi;  % missing `phi` assignment, assuming it exists
-% sim_data.b_element_state(current_blade, :, lastElement_toSave) = element_state;
-% 
-% sim_data.b_Ma(current_blade, :, lastElement_toSave) = Ma;
-% sim_data.b_Re(current_blade, :, lastElement_toSave) = Re;
-% 
-% sim_data.b_Cl(current_blade, :, lastElement_toSave) = Cl;
-% sim_data.b_Cd(current_blade, :, lastElement_toSave) = Cd;
-% 
-% sim_data.b_U_T(current_blade, :, lastElement_toSave) = U_T;
-% sim_data.b_U_R(current_blade, :, lastElement_toSave) = U_R;
-% sim_data.b_U_P(current_blade, :, lastElement_toSave) = U_P;
-% 
-% sim_data.b_f_prandtl(current_blade, :, lastElement_toSave) = f_prandtl;
-% 
-% sim_data.b_df_z_prandtl(current_blade, :, lastElement_toSave) = df_z_prandtl;
-% 
-% sim_data.b_stallAngle(current_blade, :, lastElement_toSave) = stallAngle;
-% sim_data.b_stallMode(current_blade, :, lastElement_toSave) = stallMode;
+if current_blade == 1
+    lastElement_toSave = length(sim_data.b_df_x(1,1,:))+1;
+
+    sim_data.b_time = [sim_data.b_time, t];
+else
+    lastElement_toSave = length(sim_data.b_df_x(1,1,:));
+end
+
+sim_data.b_df_x(current_blade, :, lastElement_toSave) = df_x;
+sim_data.b_df_y(current_blade, :, lastElement_toSave) = df_y;
+sim_data.b_df_z(current_blade, :, lastElement_toSave) = df_z;
+
+sim_data.b_dtau_x(current_blade, :, lastElement_toSave) = dtau_x;
+sim_data.b_dtau_y(current_blade, :, lastElement_toSave) = dtau_y;
+sim_data.b_dtau_z(current_blade, :, lastElement_toSave) = dtau_z;
+
+sim_data.b_v_x(current_blade, :, lastElement_toSave) = v_x;
+sim_data.b_v_y(current_blade, :, lastElement_toSave) = v_y;
+sim_data.b_v_z(current_blade, :, lastElement_toSave) = v_z;
+
+sim_data.b_ang_v(current_blade, :, lastElement_toSave) = ang_v;
+sim_data.b_total_v(current_blade, :, lastElement_toSave) = total_v;
+
+sim_data.b_dL(current_blade, :, lastElement_toSave) = dL;
+sim_data.b_dD(current_blade, :, lastElement_toSave) = dD;
+
+sim_data.b_alpha(current_blade, :, lastElement_toSave) = alpha;
+sim_data.b_theta(current_blade, :, lastElement_toSave) = BLADE.theta;
+sim_data.b_phi(current_blade, :, lastElement_toSave) = phi;  % missing `phi` assignment, assuming it exists
+sim_data.b_element_state(current_blade, :, lastElement_toSave) = element_state;
+
+sim_data.b_Ma(current_blade, :, lastElement_toSave) = Ma;
+sim_data.b_Re(current_blade, :, lastElement_toSave) = Re;
+
+sim_data.b_Cl(current_blade, :, lastElement_toSave) = Cl;
+sim_data.b_Cd(current_blade, :, lastElement_toSave) = Cd;
+
+sim_data.b_U_T(current_blade, :, lastElement_toSave) = U_T;
+sim_data.b_U_R(current_blade, :, lastElement_toSave) = U_R;
+sim_data.b_U_P(current_blade, :, lastElement_toSave) = U_P;
+
+sim_data.b_f_prandtl(current_blade, :, lastElement_toSave) = f_prandtl;
+
+sim_data.b_df_z_prandtl(current_blade, :, lastElement_toSave) = df_z_prandtl;
+
+sim_data.b_stallAngle(current_blade, :, lastElement_toSave) = stallAngle;
+sim_data.b_stallMode(current_blade, :, lastElement_toSave) = stallMode;
 
 end
 

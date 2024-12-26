@@ -2,30 +2,6 @@ clc
 clear
 close all
 
-
-% -------------------------------------------------------------------------
-% Estes são os inputs que devem ser dados com entrada da função
-% Servem para definir as condições da dinâmica, às quais o rotor está
-% sujeito naquele instante
-
-% Velocidade do sistema no referencia inercial
-V_i = [0; 10; 10];
-
-% Velocidade angular do rotor sobre o seu próprio referencial
-RPM = 1000;
-angular_velocity = [0; 0; RPM*pi/180];
-
-v_induced = [0; 0; 0];
-
-% Orientação do rotor relativamente ao referencial inercial
-orientation = [0; 0; 0]; %  yaw | pitch | roll 
-
-% -------------------------------------------------------------------------
-% Inicialização da variáveis gerais do simulador
-
-SIM.AerodynamicModelSelector = 1;
-SIM.atmosphereModelSelector = 2;
-
 OUTPUTS.U_T=[];
 OUTPUTS.U_R=[];
 OUTPUTS.U_P=[];
@@ -41,6 +17,25 @@ OUTPUTS.Re=[];
 OUTPUTS.Cd=[];
 OUTPUTS.Cl=[];
 
+% -------------------------------------------------------------------------
+% Estes são os inputs que devem ser dados com entrada da função
+% Servem para definir as condições da dinâmica, às quais o rotor está
+% sujeito naquele instante
+
+% Velocidade do sistema no referencia inercial
+VEHICLE.velocity_i = [0; 10; 0];
+
+% Velocidade angular do rotor sobre o seu próprio referencial
+VEHICLE.RPM = 1000;
+VEHICLE.angular_velocity = [0; 0; VEHICLE.RPM*pi/180];
+
+% Orientação do rotor relativamente ao referencial inercial
+VEHICLE.orientation = [0; 0; 0]; %  yaw | pitch | roll 
+
+
+% -------------------------------------------------------------------------
+ROTOR.v_induced = [0; 0; 0];
+
 ROTOR.Nb = 5;
 ROTOR.azimutal_points = 500;
 ROTOR.azimutal_positions = azimutalDescretization(ROTOR.azimutal_points, 0);
@@ -55,9 +50,9 @@ BLADE.Span = 1;
 BLADE.No_elements = 75;
 BLADE.prandtlTipLosses = false;
 BLADE.dy = BLADE.Span / BLADE.No_elements;
-BLADE.RootBladeDistance = 0;%.1;
+BLADE.RootBladeDistance = 0.25;
 BLADE.twistDistribution = 1;
-BLADE.root_theta = -10;
+BLADE.root_theta = 5;
 BLADE.tip_theta = 10;
 BLADE.dA = BLADE.dy * BLADE.chord;
 
@@ -71,28 +66,34 @@ airfoil = load('./airfoils/naca0012.mat').airfoil;
 BLADE.airfoil_name = airfoil.name;
 BLADE.airfoil_data = airfoil.data;
 
+
+%--------------------------------------------------------------------------
+TIME.t = 0;
+
+% -------------------------------------------------------------------------
+% Inicialização da variáveis gerais do simulador
+
+SIM.AerodynamicModelSelector = 1;
+SIM.atmosphereModelSelector = 2;
+
+% ATMOSPHERE MODEL
 ATMOSPHERE = atmosphereModel(0, SIM);
 
 %--------------------------------------------------------------------------
 % Início da função
 
-Force_blade = zeros(ROTOR.azimutal_points, 3);
-Tb_b = zeros(ROTOR.azimutal_points, 3);
-
-
-R_i_b = rotationMatrix_generator(orientation(1), orientation(2), orientation(3));
-R_b_i = transpose(R_i_b);
+BLADE.R_i_b = rotationMatrix_generator(VEHICLE.orientation(1), VEHICLE.orientation(2), VEHICLE.orientation(3));
+BLADE.R_b_i = transpose(BLADE.R_i_b);
 
 for azimute_index = 1:length(ROTOR.azimutal_positions)
 
-    % fprintf("> Azimute: %.2f\n", azimutal_positions(azimute_index)*180/pi)
+    fprintf("> Azimute: %.2f\n", ROTOR.azimutal_positions(azimute_index)*180/pi)
 
-    V_b(azimute_index, :) = ROTOR.R_r_b(:, :, azimute_index) *   R_i_b * V_i;
+    VEHICLE.velocity_b = ROTOR.R_r_b(:, :, azimute_index) *   BLADE.R_i_b * VEHICLE.velocity_i;
 
     % fprintf("Vb_x = %.2f | Vb_y = %.2f | Vb_z = %.2f \n", V_b(azimute_index, :));
 
-   [OUTPUTS, ~, ~, ~, ~] = ...
-        compute_blade_force_testFunc(R_b_i, V_b(azimute_index, :), v_induced, angular_velocity, SIM, OUTPUTS, ROTOR, BLADE, ATMOSPHERE);
+   [OUTPUTS, ~, ~] = compute_blade_force_testFunc(OUTPUTS, SIM, TIME, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
 
 end
 
@@ -110,8 +111,6 @@ polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_x, "Força e
 polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_y, "Força em Y", "N", "6-f_y.jpg")
 polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_z, "Força em z", "N", "7-f_z.jpg")
 
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.alpha, "Angle Of Attack", "deg", "8-aoa.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.phi, "Incidence Angle", "deg", "9-incidence_angle.jpg")
 polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.element_state, "Element State", "", "10-elemente_state.jpg")
 
 
@@ -121,3 +120,10 @@ polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cl, "Cl", "", "
 polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cd, "Cd", "", "14-cd.jpg")
 
 polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.f_prandtl, "F. Prandtl", "", "15-f_prandtl.jpg")
+
+
+close all
+
+polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.alpha, "Angle Of Attack", "deg", "8-aoa.jpg")
+polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.phi, "Incidence Angle", "deg", "9-incidence_angle.jpg")
+
