@@ -47,5 +47,12 @@ Rt_a_e = Rt_e_a'
 f_e =  Rt_a_e * fa
  
 
+%%
+clc
+clear
+close all
+
+[polar, foil] = xfoil('NACA0012', [1 2 3], 1e6, 0,'oper/vpar n 12')
+
 
 
