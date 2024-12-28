@@ -1,0 +1,4 @@
+NACA 0012
+PANE
+SAVE airfoil_coordinates.dat
+QUIT
