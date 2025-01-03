@@ -1,5 +1,4 @@
-function [OUTPUTS, Force_blade, Torque_blade] = compute_blade_force_testFunc(OUTPUTS, SIM, TIME, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
-
+function [OUTPUTS, Force_blade, Torque_blade] = compute_blade_force_testFunc(OUTPUTS, VEHICLE, ROTOR, BLADE, SIM, ATMOSPHERE)
 
 % forces and moments vectores
 df_x = zeros(1, BLADE.No_elements+1);
@@ -75,21 +74,9 @@ for i = 0:1:BLADE.No_elements
         Cd(i+1) = 0;
     else
 
-        if SIM.AerodynamicModelSelector == 1
-
-           [Cl(i+1), Cd(i+1), ~] = AerodynamicModel(alpha(i+1), Re(i+1), BLADE.airfoil_data, false);
+        [Cl(i+1), Cd(i+1), ~] = AerodynamicModel(alpha(i+1), Re(i+1), BLADE.airfoil_data, false);
            
-            stallAngle(i+1) = 0;
-
-            % fprintf("Re = %.2e | alpha = %.2f | Cl = %.3f | Cd = %.3f\n", Re(i+1), alpha(i+1), Cl(i+1), Cd(i+1))
-            
-        else
-
-            [Cl(i+1), Cd(i+1)] = NeuralFoil("naca0012", Re(i+1), 0, alpha(i+1));
-
-            stallAngle(i+1) = 0;
-       
-        end       
+        stallAngle(i+1) = 0;      
            
     end    
     

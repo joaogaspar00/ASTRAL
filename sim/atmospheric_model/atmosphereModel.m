@@ -5,8 +5,7 @@ function ATMOSPHERE = atmosphereModel (height, SIM)
     gamma = 1.4;
     R = 287.053;
 
-    if SIM.atmosphereModelSelector == 1
-
+    if strcmp(SIM.atmosphereModel, 'Null')
         if height <= 11000
             T = 15.04 - 0.00649 * height;
             p = 101.29 * ((T + 273.1) / 288.08)^5.256;
@@ -26,7 +25,7 @@ function ATMOSPHERE = atmosphereModel (height, SIM)
 
         nu = mu / rho;
 
-    elseif SIM.atmosphereModelSelector == 2
+    elseif strcmp(SIM.atmosphereModel, 'atmosisa')
         [T,a,p,rho,nu, mu] = atmosisa (height);
     else
         error("Simulation Error: Selected atmosphere model is not valid");

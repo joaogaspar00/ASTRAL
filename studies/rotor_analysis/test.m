@@ -52,16 +52,16 @@ BLADE.prandtlTipLosses = false;
 BLADE.dy = BLADE.Span / BLADE.No_elements;
 BLADE.RootBladeDistance = 0.25;
 BLADE.twistDistribution = 1;
-BLADE.root_theta = 5;
-BLADE.tip_theta = 10;
+BLADE.theta = 5;
+BLADE.twist_rate = 0;
 BLADE.dA = BLADE.dy * BLADE.chord;
 
 BLADE.pos_sec = (0:BLADE.No_elements) * BLADE.dy + BLADE.RootBladeDistance;
 BLADE.pos_sec = [zeros(length(BLADE.pos_sec), 1), BLADE.pos_sec', zeros(length(BLADE.pos_sec), 1)];
 
-BLADE.theta = twist_distribution(BLADE, ROTOR);
+BLADE.theta = twist_distribution(BLADE);
 
-airfoil = load('./airfoils/naca0012.mat').airfoil;
+airfoil = load('./airfoils/data/naca0012.mat').airfoil;
 
 BLADE.airfoil_name = airfoil.name;
 BLADE.airfoil_data = airfoil.data;
@@ -73,11 +73,13 @@ TIME.t = 0;
 % -------------------------------------------------------------------------
 % Inicialização da variáveis gerais do simulador
 
-SIM.AerodynamicModelSelector = 1;
-SIM.atmosphereModelSelector = 2;
+SIM.AerodynamicModel = "NeuralFoil";
+SIM.atmosphereModel = "atmosisa";
 
 % ATMOSPHERE MODEL
 ATMOSPHERE = atmosphereModel(0, SIM);
+
+disp(BLADE)
 
 %--------------------------------------------------------------------------
 % Início da função
@@ -93,37 +95,36 @@ for azimute_index = 1:length(ROTOR.azimutal_positions)
 
     % fprintf("Vb_x = %.2f | Vb_y = %.2f | Vb_z = %.2f \n", V_b(azimute_index, :));
 
-   [OUTPUTS, ~, ~] = compute_blade_force_testFunc(OUTPUTS, SIM, TIME, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
+   [OUTPUTS, ~, ~] = compute_blade_force_testFunc(OUTPUTS, VEHICLE, ROTOR, BLADE, SIM, ATMOSPHERE);
 
 end
+
+disp(OUTPUTS)
 
 
 %% Gráficos AZIMUTAIS
 
-close all
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_T, "Velocidade Tangencial", "m/s", "1-vel_tangencial.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_R, "Velocidade Radial", "m/s", "2-vel_radial.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_P, "Velocidade Vertical", "m/s", "3-vel_vertical.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.flowMode, "Flow Direction", "", "4-flow_direction.jpg")
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_x, "Força em X", "N", "5-f_x.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_y, "Força em Y", "N", "6-f_y.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_z, "Força em z", "N", "7-f_z.jpg")
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.element_state, "Element State", "", "10-elemente_state.jpg")
-
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Re, "Re", "", "11-re.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Ma, "Ma", "", "12-ma.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cl, "Cl", "", "13-cl.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cd, "Cd", "", "14-cd.jpg")
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.f_prandtl, "F. Prandtl", "", "15-f_prandtl.jpg")
-
-
-close all
-
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.alpha, "Angle Of Attack", "deg", "8-aoa.jpg")
-polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.phi, "Incidence Angle", "deg", "9-incidence_angle.jpg")
-
+% close all
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_T, "Velocidade Tangencial", "m/s", "1-vel_tangencial.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_R, "Velocidade Radial", "m/s", "2-vel_radial.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.U_P, "Velocidade Vertical", "m/s", "3-vel_vertical.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.flowMode, "Flow Direction", "", "4-flow_direction.jpg")
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_x, "Força em X", "N", "5-f_x.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_y, "Força em Y", "N", "6-f_y.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.df_z, "Força em z", "N", "7-f_z.jpg")
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.element_state, "Element State", "", "10-elemente_state.jpg")
+% 
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Re, "Re", "", "11-re.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Ma, "Ma", "", "12-ma.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cl, "Cl", "", "13-cl.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.Cd, "Cd", "", "14-cd.jpg")
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.f_prandtl, "F. Prandtl", "", "15-f_prandtl.jpg")
+% 
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.alpha, "Angle Of Attack", "deg", "8-aoa.jpg")
+% polarPlot(ROTOR.azimutal_positions, BLADE.pos_sec(:, 2), OUTPUTS.phi, "Incidence Angle", "deg", "9-incidence_angle.jpg")
+% 
