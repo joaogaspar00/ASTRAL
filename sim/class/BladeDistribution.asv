@@ -1,0 +1,82 @@
+classdef BladeDistribution
+    properties
+        total_velocity
+        dL
+        dD
+
+        phi
+        alpha
+
+        element_state
+
+        Ma
+        Re
+
+        Cl
+        Cd
+
+        U
+
+        flow_mode
+
+        dF_e
+        dF_a
+        dF_r
+
+        dT_r
+
+        f_prandtl     
+
+        %magnitude dos erros
+        f_error 
+        t_error    
+
+        %em percentagem
+        f_error_p
+        t_error_p
+    end
+
+    methods
+        % Construtor
+        function obj = BladeDistribution(total_velocity, dL, dD, phi, alpha, ...
+                                         element_state, Ma, Re, Cl, Cd, ...
+                                         U, flow_mode, ...
+                                         dF_e, dF_a, dF_r, dT_r, ...
+                                         f_prandtl)
+
+            obj.total_velocity = total_velocity;
+            obj.dL = dL;
+            obj.dD = dD;
+
+            obj.phi = phi;
+            obj.alpha = alpha;
+
+            obj.element_state = element_state;
+
+            obj.Ma = Ma;
+            obj.Re = Re;
+
+            obj.Cl = Cl;
+            obj.Cd = Cd;
+
+            obj.U = U;
+
+            obj.flow_mode = flow_mode;
+
+            obj.dF_e = dF_e;
+            obj.dF_a = dF_a;
+            obj.dF_r = dF_r;
+
+            obj.dT_r = dT_r;
+
+            obj.f_prandtl = f_prandtl;
+
+            obj.f_error = f_error;
+            obj.f_error_p = f_error_p;
+
+            obj.t_error = t_error;
+            obj.t_error = t_error_p;
+
+        end
+    end
+end

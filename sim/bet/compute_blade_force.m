@@ -1,215 +1,154 @@
-function [Force_blade, Torque_blade, stall_percentage] = ...
-    compute_blade_force(t, velocity, rotor_angular_velocity, current_blade, SIM, ROTOR, BLADE, ATMOSPHERE)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% compute_blade_force.m
+%
+% Author: João Gaspar
+% Last Modified: April 21, 2025
+% Version: 1.0
+%
+% Description:
+% This function computes the aerodynamic forces and torques acting on a
+% single blade of a rotor, based on the local flow conditions at each
+% blade section. The method considers inflow velocity, induced velocity,
+% rotation, Prandtl tip loss correction, and aerodynamic coefficients
+% obtained from external models (e.g., NeuralFoil or Hybrid).
+%
+% The result includes force and torque in the inertial frame, and detailed
+% per-section distributions used for debugging or visualization.
+%
+% Inputs:
+% - index_blade: index of the current blade (azimuthal position)
+% - SIM: structure with simulation settings and selected aerodynamic model
+% - VEHICLE: structure with vehicle state in the current simulation step
+% - ROTOR: structure with rotor kinematics and transformations
+% - BLADE: structure with geometry and aerodynamic data of the blade
+% - ATMOSPHERE: structure with atmospheric conditions
+%
+% Outputs:
+% - Force_blade: [3x1] total aerodynamic force on the blade in inertial frame
+% - Torque_blade: [3x1] total aerodynamic torque of the blade in rotor frame
+% - blade_distribution: BladeDistribution object with per-section details
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+function [Force_blade, Torque_blade, blade_distribution] = ... 
+    compute_blade_force(index_blade, SIM, VEHICLE, ROTOR, BLADE, ATMOSPHERE)
 
-% global sim_data
+% Preallocate memory for aerodynamic variables along the blade span
+total_velocity = zeros(1, BLADE.No_elements+1); % Velocity norm
+dL = zeros(1, BLADE.No_elements+1); % Lift
+dD = zeros(1, BLADE.No_elements+1); % Drag
+phi = zeros(1, BLADE.No_elements+1); % Inflow angle
+alpha = zeros(1, BLADE.No_elements+1); % Angle of attack
+element_state = zeros(1, BLADE.No_elements+1); % Blade element flow regime
 
-% forces and moments vectores
-df_x = zeros(1, BLADE.No_elements+1);
-df_y = zeros(1, BLADE.No_elements+1);
-df_z = zeros(1, BLADE.No_elements+1);
+Ma = zeros(1, BLADE.No_elements+1); % Mach number
+Re = zeros(1, BLADE.No_elements+1); % Reynolds number
+Cl = zeros(1, BLADE.No_elements+1); % Lift coefficient
+Cd = zeros(1, BLADE.No_elements+1); % Drag coefficient
 
-v_x = velocity(1)*ones(1, BLADE.No_elements+1);
-v_y = velocity(2)*ones(1, BLADE.No_elements+1);
-v_z = velocity(3)*ones(1, BLADE.No_elements+1);
+U_T = zeros(1, BLADE.No_elements+1); % Tangential velocity
+U_R = zeros(1, BLADE.No_elements+1); % Radial velocity (unused here)
+U_P = zeros(1, BLADE.No_elements+1); % Axial (parallel) velocity
 
-ang_v = zeros(1, BLADE.No_elements+1);
-total_v = zeros(1, BLADE.No_elements+1);
+v_i = zeros(1, BLADE.No_elements+1); % Induced velocity at each section
+flow_mode = zeros(1, BLADE.No_elements+1); % Forward or reverse flow flag
 
-dL = zeros(1, BLADE.No_elements+1);
-dD = zeros(1, BLADE.No_elements+1);
+dF_e = zeros(3, BLADE.No_elements+1); % Element force in element frame
+dF_a = zeros(3, BLADE.No_elements+1); % Element force in aerodynamic frame
+dT_r = zeros(3, BLADE.No_elements+1); % Element torque in rotor frame
 
-phi = zeros(1, BLADE.No_elements+1);
-alpha = zeros(1, BLADE.No_elements+1);
+% Rotor angular velocity vector
+vec_angular_velocity = [0; 0; ROTOR.velocity];
 
-element_state = zeros(1, BLADE.No_elements+1);
+% Loop over all blade elements (radial sections)
+for i = 1:length(BLADE.pos_sec)
 
-Ma = zeros(1, BLADE.No_elements+1);  
-Re = zeros(1, BLADE.No_elements+1);
+    % Induced velocity is assumed constant for now
+    v_i(i) = ROTOR.induced_velocity;
+    v_i_vec = [0; 0; ROTOR.induced_velocity];
 
-Cl = zeros(1, BLADE.No_elements+1);
-Cd = zeros(1, BLADE.No_elements+1);
-
-U_T = zeros(1, BLADE.No_elements+1);
-U_R = zeros(1, BLADE.No_elements+1);
-U_P = zeros(1, BLADE.No_elements+1);
-
-stallAngle = zeros(1, BLADE.No_elements+1);
-stallMode = zeros(1, BLADE.No_elements+1);
-     
-for i = 0:1:BLADE.No_elements
+    % Relative rotational velocity at blade element
+    VR_e = cross(BLADE.pos_sec(:, i), vec_angular_velocity);
     
-    % element angular velocity
-    ang_v(i+1) = rotor_angular_velocity * BLADE.pos_sec(i+1);
-
-    % blade velocity value
-    vel_element = velocity + [ang_v(i+1);0;0];
-   
-    % blade velocity elements
-    U_T(i+1) = vel_element(1);
-    U_R(i+1) = vel_element(2);
-    U_P(i+1) = vel_element(3);
-
-     % incident velocity
-    total_v(i+1) = sqrt(U_T(i+1)^2 + U_P(i+1)^2);
+    % Effective velocity in blade element frame
+    V_e = VEHICLE.velocity_b + VR_e - v_i_vec;
     
-    % get AOA and inflow angle
-    [alpha(i+1), phi(i+1), element_state(i+1)] = getFlowAngles(U_T(i+1), U_P(i+1), BLADE.theta(i+1));
-
-     % mach number
-    Ma(i+1) = total_v(i+1)/(sqrt(1.4*287.053*ATMOSPHERE.temperature));
+    % Decompose effective velocity
+    U_T(i) = V_e(1);
+    U_R(i) = V_e(2);
+    U_P(i) = V_e(3);
     
-    % reynolds number
-    Re(i+1) = ReynoldsNumber_func(ATMOSPHERE.density, total_v(i+1), ROTOR.chord, ATMOSPHERE.kinematicViscosity);
-    % 
-    % if i == BLADE.No_elements
-    %     fprintf("tip re = %.2E | rho = %.2E | V = %.3f | c = = %.3f | mu = %.2E \n", Re(i+1), ATMOSPHERE.density, total_v(i+1), ROTOR.chord, ATMOSPHERE.kinematicViscosity);
-    % end
+    % Determine flow direction (0 = forward, 1 = reversed)
+    flow_mode(i) = U_T(i) < 0;
 
-    % aeroBLADE.dynamic coefficients
-    if total_v(i+1) == 0  || isnan(total_v(i+1))
-        Cl(i+1) = 0;
-        Cd(i+1) = 0;
+    % Compute magnitude of relative velocity
+    total_velocity(i) = sqrt(U_T(i)^2 + U_P(i)^2);
+    
+    % Compute angle of attack and inflow angle
+    [alpha(i), phi(i), element_state(i)] = getFlowAngles(U_T(i), U_P(i), BLADE.theta(i));
+
+    % Compute Mach and Reynolds numbers
+    Ma(i) = MachNumber_func(total_velocity(i), ATMOSPHERE);
+    Re(i) = ReynoldsNumber_func(total_velocity(i), BLADE, ATMOSPHERE);
+
+    % Retrieve aerodynamic coefficients
+    if total_velocity(i) == 0 || isnan(total_velocity(i))
+        Cl(i) = 0; Cd(i) = 0;
     else
-
-        if SIM.AerodynamicModelSelector == 1
-
-           [Cl(i+1), Cd(i+1), ~] = AerodynamicModel(alpha(i+1), Re(i+1), BLADE.airfoil_data, false);
-           
-            stallAngle(i+1) = 0;
-
+        if strcmp(SIM.AerodynamicModelSelector, "NeuralFoil")
+            [Cl(i), Cd(i), ~] = NeuralFoil(BLADE.airfoil_name, Re(i), 0, alpha(i));
+        elseif strcmp(SIM.AerodynamicModelSelector, "Hybrid")
+            [Cl(i), Cd(i), ~] = AerodynamicModel(alpha(i), Re(i), BLADE.airfoil_data, false);
         else
-
-            [Cl(i+1), Cd(i+1)] = NeuralFoil("naca0012", Re(i+1), 0, alpha(i+1));
-
-            stallAngle(i+1) = 0;
-       
-        end       
-           
-    end    
-    
-
-    % element aeroBLADE.dynamic forces
-    dL(i+1) = 1/2 * ATMOSPHERE.density * (total_v(i+1)^2) * Cl(i+1) * BLADE.dA;
-    dD(i+1) = 1/2 * ATMOSPHERE.density * (total_v(i+1)^2) * Cd(i+1) * BLADE.dA;
-
-    % axis forces
-    if element_state(i+1) == 1 || element_state(i+1) == 5
-
-        df_x(i+1) = dL(i+1);
-        df_y(i+1) = 0;
-        df_z(i+1) = dD(i+1);
-
-    elseif element_state(i+1) == 2 || element_state(i+1) == 6
-
-        df_x(i+1) = - sind(phi(i+1)) * dL(i+1) - cosd(phi(i+1)) * dD(i+1) ;
-        df_y(i+1) = 0;
-        df_z(i+1) = cosd(phi(i+1)) * dL(i+1) - sind(phi(i+1)) * dD(i+1);
-
-    elseif element_state(i+1) == 3
-
-        df_x(i+1) = - cosd(phi(i+1)) * dD(i+1) ;
-        df_y(i+1) = 0;
-        df_z(i+1) = - sind(phi(i+1)) * dD(i+1);
-
-    elseif element_state(i+1) == 4
-
-        df_x(i+1) = - sind(phi(i+1)) * dL(i+1) + cosd(phi(i+1)) * dD(i+1) ;
-        df_y(i+1) = 0;
-        df_z(i+1) = cosd(phi(i+1)) * dL(i+1) - sind(phi(i+1)) * dD(i+1);
-
-    else
-
-        error("Check Forces")
-        
+            error("Invalid aerodynamic model selected.");
+        end
     end
 
-    if abs(alpha(i+1)) >= stallAngle(i+1)
-        stallMode(i+1) = 1;
-    else
-        stallMode(i+1) = 0;
-    end
+    % Compute elemental lift and drag forces
+    dL(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cl(i) * BLADE.chord;
+    dD(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cd(i) * BLADE.chord;
 
+    % Force vector in aerodynamic frame (X = Drag, Z = Lift)
+    dF_a(:, i) = [dD(i); 0; dL(i)];
 end
 
-
-
-if BLADE.prandtlTipLosses == true
-    f_prandtl = prandtl_function(phi(1), phi(end), ROTOR, BLADE);   
+% Apply Prandtl tip loss correction if enabled
+if BLADE.prandtlTipLosses
+    f_prandtl = prandtl_function(phi(1), phi(end), ROTOR, BLADE);
 else
-    f_prandtl = ones(1, length(df_z));
-end
- 
-df_z_prandtl = df_z .* f_prandtl;
-    
-f_x = sum(df_x);
-f_y = sum(df_y);
-f_z = sum(df_z_prandtl);
-
-
-dtau_x =  df_x .* BLADE.pos_sec;
-dtau_y =  df_y .* BLADE.pos_sec;
-dtau_z =  df_z_prandtl .* BLADE.pos_sec;
-
-tau_x = sum(dtau_x);
-tau_y = sum(dtau_y);
-tau_z = sum(dtau_z);
-
-Force_blade = [f_x; f_y; f_z];
-Torque_blade = [tau_x; tau_y; tau_z];
-
-stall_percentage = sum(stallMode)/(BLADE.No_elements + 1);
-
-%--------------------------------------------------------------------------
-
-if current_blade == 1
-    lastElement_toSave = length(sim_data.b_df_x(1,1,:))+1;
-
-    sim_data.b_time = [sim_data.b_time, t];
-else
-    lastElement_toSave = length(sim_data.b_df_x(1,1,:));
+    f_prandtl = ones(1, length(dF_a));
 end
 
-sim_data.b_df_x(current_blade, :, lastElement_toSave) = df_x;
-sim_data.b_df_y(current_blade, :, lastElement_toSave) = df_y;
-sim_data.b_df_z(current_blade, :, lastElement_toSave) = df_z;
+% Apply tip correction to aerodynamic forces
+dF_a = f_prandtl .* dF_a ;
 
-sim_data.b_dtau_x(current_blade, :, lastElement_toSave) = dtau_x;
-sim_data.b_dtau_y(current_blade, :, lastElement_toSave) = dtau_y;
-sim_data.b_dtau_z(current_blade, :, lastElement_toSave) = dtau_z;
-
-sim_data.b_v_x(current_blade, :, lastElement_toSave) = v_x;
-sim_data.b_v_y(current_blade, :, lastElement_toSave) = v_y;
-sim_data.b_v_z(current_blade, :, lastElement_toSave) = v_z;
-
-sim_data.b_ang_v(current_blade, :, lastElement_toSave) = ang_v;
-sim_data.b_total_v(current_blade, :, lastElement_toSave) = total_v;
-
-sim_data.b_dL(current_blade, :, lastElement_toSave) = dL;
-sim_data.b_dD(current_blade, :, lastElement_toSave) = dD;
-
-sim_data.b_alpha(current_blade, :, lastElement_toSave) = alpha;
-sim_data.b_theta(current_blade, :, lastElement_toSave) = BLADE.theta;
-sim_data.b_phi(current_blade, :, lastElement_toSave) = phi;  % missing `phi` assignment, assuming it exists
-sim_data.b_element_state(current_blade, :, lastElement_toSave) = element_state;
-
-sim_data.b_Ma(current_blade, :, lastElement_toSave) = Ma;
-sim_data.b_Re(current_blade, :, lastElement_toSave) = Re;
-
-sim_data.b_Cl(current_blade, :, lastElement_toSave) = Cl;
-sim_data.b_Cd(current_blade, :, lastElement_toSave) = Cd;
-
-sim_data.b_U_T(current_blade, :, lastElement_toSave) = U_T;
-sim_data.b_U_R(current_blade, :, lastElement_toSave) = U_R;
-sim_data.b_U_P(current_blade, :, lastElement_toSave) = U_P;
-
-sim_data.b_f_prandtl(current_blade, :, lastElement_toSave) = f_prandtl;
-
-sim_data.b_df_z_prandtl(current_blade, :, lastElement_toSave) = df_z_prandtl;
-
-sim_data.b_stallAngle(current_blade, :, lastElement_toSave) = stallAngle;
-sim_data.b_stallMode(current_blade, :, lastElement_toSave) = stallMode;
-
+% Rotate from aerodynamic to element frame
+for i = 1:length(BLADE.pos_sec)
+    R_a_e = rotationMatrix_generator(0, phi(:, i), 0, "deg");
+    dF_e(:, i) = R_a_e * dF_a(:, i);
 end
 
+% Element frame to blade frame (translation only → same orientation)
+dF_b = dF_e;
 
+% Transform to rotor frame
+dF_r = ROTOR.R_b_r(:, :, index_blade) * dF_b;
+
+% Transform to inertial frame
+dF_i = ROTOR.R_r_i * dF_r;
+
+% Compute torque from position vector and force in rotor frame
+for i = 1:length(BLADE.pos_sec)
+    dT_r(:, i) = cross(BLADE.pos_sec_r(:, i, index_blade), dF_r(:, i));
+end
+
+% Integrate forces and torques over the blade
+[Force_blade, Torque_blade] = force_torque_integration(SIM, BLADE, dF_i, dT_r);
+
+% Pack all per-element variables into a distribution object for output
+blade_distribution = BladeDistribution(total_velocity, dL, dD, phi, alpha, BLADE.theta, ...
+                                       element_state, Ma, Re, Cl, Cd, ...
+                                       U_T, U_R, U_P, flow_mode, v_i, ...
+                                       dF_a, dF_e, dF_i, dT_r, ...
+                                       f_prandtl);
+end

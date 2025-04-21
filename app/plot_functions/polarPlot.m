@@ -1,57 +1,48 @@
 function polarPlot(azimutes, rho, values, stitle, slabel, img_name)
 
-% Supondo que azimutes, rho, OUTPUT.U_T já estão definidos.
-
-% Número de azimutes (exemplo: 36 posições em um círculo)
-num_azimutes = length(azimutes);
-
-% Replicar a mesma distribuição radial para cada azimute
-r_matrix = repmat(rho, 1, num_azimutes);
-
-% Criar a matriz de ângulos para o polarscatter
-theta_matrix = repmat(azimutes', length(rho), 1);
-
-% Converter as matrizes para vetores para usar no scatter3
-r_vector = r_matrix(:);
-theta_vector = theta_matrix(:);
-
-% Velocidade associada às coordenadas polares
-U_matrix = values'; % Supondo que OUTPUT.U_T tenha valores de velocidade.
-
-% Plotar o gráfico de dispersão polar com a terceira dimensão representando a velocidade
-figure;
-
-% Adicionar pontos 2D no gráfico polar para visualização inicial
-polarplot(theta_vector, r_vector, 'o', 'MarkerEdgeColor','none'); 
-hold on;
-
-% Plotar em 3D: adicionando a velocidade como terceiro eixo (coluna)
-scatter3(theta_vector, r_vector, U_matrix(:), 50, U_matrix(:), 'filled'); 
-% Add a colorbar with the 'viridis' colormap
-colorbar;
-colormap("turbo");
-colorbar_handle = colorbar;
-
-% Legenda da barra de cor
-ylabel(colorbar_handle, slabel, 'FontSize', 12);
-
-% Ajustar orientação: definir 0 graus para o norte
-set(gca, 'ThetaZeroLocation', 'top'); 
-
-% Definir os rótulos para eixos polares
-rticks([]);  % Remove os rótulos das coordenadas radiais
-rticklabels({}); % Remover rótulos dos valores radiais
-
-thetaticks(0:90:360); % Definir os rótulos para os ângulos azimutais
-
-% Visão 2D polar
-view(2); 
-
-title(stitle);
-
-% Salvar a figura no formato especificado
-saveas(gcf, img_name);
-
+% Converter ângulos para radianos se necessário
+if max(azimutes) > 2*pi
+    azimutes = deg2rad(azimutes);
 end
 
+% Número de azimutes
+num_azimutes = length(azimutes);
+num_rho = length(rho);
 
+% Criar matrizes para coordenadas polares
+[Theta, R] = meshgrid(azimutes, rho);
+
+% Garantir que os valores estejam na ordem correta
+U_matrix = values'; % Transpor para alinhar com [rho, azimutes]
+
+% Converter coordenadas polares para cartesianas para scatter3
+X = R .* cos(Theta);
+Y = R .* sin(Theta);
+
+% Criar figura
+figure;
+scatter3(X(:), Y(:), U_matrix(:), 8, U_matrix(:), 'filled'); 
+colorbar;
+colormap("turbo");
+ylabel(colorbar, slabel, 'FontSize', 16);
+
+% Ajustar o gráfico para um visualização polar 2D
+view(2);
+axis equal;
+
+% Ajustar os limites para maximizar o zoom mantendo todos os dados visíveis
+xlim([min(X(:)), max(X(:))]);
+ylim([min(Y(:)), max(Y(:))]);
+
+% Título
+title(stitle);
+
+% Remover labels de eixos para manter estilo polar
+set(gca, 'XTick', [], 'YTick', [], 'XColor', 'none', 'YColor', 'none');
+
+% Salvar a imagem, se necessário
+% if ~isempty(img_name)
+%     saveas(gcf, img_name, 'epsc'); % Salva como .eps em cores
+% end
+
+end

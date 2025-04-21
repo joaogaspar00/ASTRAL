@@ -1,4 +1,4 @@
-function CD2 = poststallRegime_CD(alpha, aerodas_data)
+function CD2 = AERODAS_poststallRegime_CD(alpha, aerodas_data)
 
 
 if alpha > (2*aerodas_data.A0 - aerodas_data.ACL1) && alpha < aerodas_data.ACD1

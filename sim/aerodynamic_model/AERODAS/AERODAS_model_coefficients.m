@@ -1,11 +1,11 @@
-function DATA = AERODAS_model_coefficients(Re, alpha, CL, CD, conf, stall_index, stall_angle, stall_cl, tc, AR)
+function DATA = AERODAS_model_coefficients(Re, alpha, CL, CD, CONF, stall_index, stall_angle, stall_cl, tc, AR)
 
 % Armazena os resultados no struct DATA
 DATA.Re = Re;  % Armazenando o número de Reynolds
 DATA.alpha = alpha;
 DATA.CL = CL;
 DATA.CD = CD;
-DATA.conf = conf; 
+DATA.CONF = CONF; 
 DATA.stall_index = stall_index;
 
 DATA.A0 = getAlphaZeroCL(DATA.alpha, DATA.CL);     
@@ -38,6 +38,7 @@ else
     DATA.preStallMode = "NeuralFoil";
 end
 
-DATA.preStallCurve = fit(alpha', CL', 'smoothingspline');
+DATA.preStallCurve_CL = fit(alpha', CL', 'smoothingspline');
+DATA.preStallCurve_CD = fit(alpha', CD', 'smoothingspline');
 
 end
