@@ -28,6 +28,6 @@
 
 function Re = ReynoldsNumber_func(V, BLADE, ATMOSPHERE)
 
-    Re = ATMOSPHERE.density * V * BLADE.chord / ATMOSPHERE.kinematic_viscosity;
+    Re = ATMOSPHERE.density * V * BLADE.chord / ATMOSPHERE.dynamic_viscosity;
 
 end

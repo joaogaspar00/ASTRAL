@@ -41,8 +41,16 @@ if norm(U_e) == 0
     element_state = 0;
 else
     % Calculate the inflow angle phi using the dot product between the velocity vector and reference
-    phi = -180 + acosd(dot(ex_e, U_e) / (norm(U_e) * norm(ex_e)));
-    
+    if U_T == 0
+        phi = -90;
+    else
+        if U_T > 0
+            phi = atand(U_P / U_T);
+        else
+            phi = -90 - atand(U_P / U_T);
+        end
+    end
+
     % Calculate the angle of attack alpha based on the pitch angle and inflow angle
     if phi >= theta
         alpha = phi - theta; % Positive angle of attack (relative to blade pitch)

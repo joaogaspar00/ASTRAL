@@ -27,7 +27,7 @@ OUTPUT.T_total = [];
 OUTPUT.temperature = [];
 OUTPUT.pressure = [];
 OUTPUT.density = [];
-OUTPUT.dynamic_visvosity = [];
+OUTPUT.dynamic_viscosity = [];
 OUTPUT.kinematic_viscosity = [];
 OUTPUT.sound_speed = [];
 

@@ -19,12 +19,12 @@ function [ATMOSPHERE] = atmosphereModel_selector(TIME, SIM, VEHICLE)
     end
    
 
-    ATMOSPHERE.wind_velocity = [0; 0; 0];
+    ATMOSPHERE.wind_velocity = [0; 0; 0.5];
 
     ATMOSPHERE.temperature = T;
     ATMOSPHERE.pressure = p;
     ATMOSPHERE.density = rho;
-    ATMOSPHERE.dynamic_visvosity = mu;
+    ATMOSPHERE.dynamic_viscosity = mu;
     ATMOSPHERE.kinematic_viscosity = nu;
     ATMOSPHERE.sound_speed = a;
   

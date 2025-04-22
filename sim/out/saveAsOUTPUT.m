@@ -26,7 +26,7 @@ OUTPUT.rotor_induced_velocity = [OUTPUT.rotor_induced_velocity; ROTOR.induced_ve
 OUTPUT.temperature = [OUTPUT.temperature; ATMOSPHERE.temperature];
 OUTPUT.pressure = [OUTPUT.pressure; ATMOSPHERE.pressure];
 OUTPUT.density = [OUTPUT.density; ATMOSPHERE.density];
-OUTPUT.dynamic_visvosity = [OUTPUT.dynamic_visvosity; ATMOSPHERE.dynamic_visvosity];
+OUTPUT.dynamic_viscosity = [OUTPUT.dynamic_viscosity; ATMOSPHERE.dynamic_viscosity];
 OUTPUT.kinematic_viscosity = [OUTPUT.kinematic_viscosity; ATMOSPHERE.kinematic_viscosity];
 OUTPUT.sound_speed = [OUTPUT.sound_speed; ATMOSPHERE.sound_speed];
 

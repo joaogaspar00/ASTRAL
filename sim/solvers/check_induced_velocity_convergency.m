@@ -9,15 +9,15 @@ new_vel = R_i_r_new * CURRENT.vehicle_velocity;
 old_UP = old_vel(3) - CURRENT.rotor_induced_velocity;
 new_UP = new_vel(3) - ROTOR.induced_velocity;
 
-% fprintf("\told_UP = %.3f | new_UP = %.3f | diff = %.10e\n", old_UP, new_UP, abs(old_UP - new_UP));
+fprintf("\told_UP = %.3f | new_UP = %.3f | diff = %.10e\n", old_UP, new_UP, abs(old_UP - new_UP));
 
-if counter_vi == 3
+if counter_vi == 10
     % fprintf("\ttime step convergency FORCED [%d]\n\n", counter_vi)
     vi_convergency = true;
     return;
 end
 
-if abs(old_UP - new_UP) < 0.999
+if abs(old_UP - new_UP) < 0.1
     % fprintf("\ttime step convergency [%d]\n\n", counter_vi)
     vi_convergency = true;
 else

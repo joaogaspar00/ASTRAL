@@ -71,7 +71,7 @@ for i = 1:length(BLADE.pos_sec)
     VR_e = cross(BLADE.pos_sec(:, i), vec_angular_velocity);
     
     % Effective velocity in blade element frame
-    V_e = VEHICLE.velocity_b + VR_e - v_i_vec;
+    V_e = VEHICLE.velocity_b + VR_e - v_i_vec + ATMOSPHERE.wind_velocity_b;
     
     % Decompose effective velocity
     U_T(i) = V_e(1);
