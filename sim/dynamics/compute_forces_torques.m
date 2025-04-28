@@ -60,9 +60,10 @@ end
 F_total = F_gravity + F_drag_cilinder + F_rotor;
 
 % Total torque includes only rotor torque (x and y components kept, z zeroed)
-% T_total = T_rotor;
-% T_total(3) = 0;
-T_total = [0;0;0];
+T_total = T_rotor;
+T_total(3) = 0;
+
+% T_total =[0; 0; 0];
 
 % Return only the z-component of rotor torque as scalar
 T_rotor = T_rotor(3);

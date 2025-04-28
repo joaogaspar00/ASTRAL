@@ -62,6 +62,7 @@ fprintf('              SIMULATION OUTPUT DATA              \n');
 fprintf('==================================================\n\n');
    
 disp(OUTPUT)
+disp(OUTPUT.rotor_data)
 
 fprintf('==================================================\n');
 fprintf('          EXIT SIMULATION WITH NO ERRORS           \n');
