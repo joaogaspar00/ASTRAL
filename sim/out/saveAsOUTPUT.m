@@ -12,10 +12,12 @@ OUTPUT.T_total = [OUTPUT.T_total; T_total'];
 OUTPUT.T_rotor = [OUTPUT.T_rotor; T_rotor'];
 
 % OUTPUT.vehicle_acceleration = [OUTPUT.vehicle_acceleration; VEHICLE.acceleration'];
+OUTPUT.vehicle_acceleration = [OUTPUT.vehicle_velocity; VEHICLE.acceleration'];
 OUTPUT.vehicle_velocity = [OUTPUT.vehicle_velocity; VEHICLE.velocity'];
 OUTPUT.vehicle_position = [OUTPUT.vehicle_position; VEHICLE.position'];
 
 % OUTPUT.vehicle_ang_acceleration = [OUTPUT.vehicle_ang_acceleration; VEHICLE.angular_acceleration'];
+OUTPUT.vehicle_ang_acceleration = [OUTPUT.vehicle_ang_velocity; ROTOR.acceleration'];
 OUTPUT.vehicle_ang_velocity = [OUTPUT.vehicle_ang_velocity; VEHICLE.ang_velocity'];
 OUTPUT.vehicle_orientation = [OUTPUT.vehicle_orientation; VEHICLE.orientation'];
 

@@ -4,7 +4,7 @@ function  [SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH] = init_sim_inputs(inData)
 
 VEHICLE.mass_payload = inData.sim_payload_mass;
 
-%-> VEHICLE.dragMode = app.vehicleDrag;
+%VEHICLE.dragMode = app.vehicleDrag;
 
 VEHICLE.InitPosition = [0; 0; inData.sim_init_height];
 
@@ -17,6 +17,8 @@ VEHICLE.InitAngularVelocity  = [0; 0; 0];
 
 % Rotor
 ROTOR.openRotor = inData.openRotor_mode;
+
+ROTOR.rotorIsOpen = false;
 
 ROTOR.Nb = inData.rotor_no_blades;
 
@@ -47,12 +49,9 @@ BLADE.airfoil_data = airfoil.data;
 
 ROTOR.induced_velocity = 0;
 
-
 % ADDITIONAL PARAMETERS
 
 BLADE.AR = BLADE.Span / BLADE.chord;
-
-BLADE.fixed_positions = get_blades_position(ROTOR.Nb);
 
 BLADE.thickness =  BLADE.tc * BLADE.chord;
 
@@ -70,20 +69,13 @@ ROTOR.mass = BLADE.mass * ROTOR.Nb;
 ROTOR.azimutal_points = inData.rotor_azimutal_points;
 
 
-ROTOR.II = inertia_tensor(BLADE);
-ROTOR.II_inv = inv(ROTOR.II);
-
-
 ROTOR.azimutal_positions = azimutalDescretization(ROTOR.azimutal_points, 0);
 
 for k = 1:ROTOR.azimutal_points    
 
-     R_r_b = rotationMatrix_generator(ROTOR.azimutal_positions(k), 0, 0, "DEG");
-
-     ROTOR.R_r_b(:, :, k) = R_r_b;
-     ROTOR.R_b_r(:, :, k) = transpose(R_r_b);
+    ROTOR.R_r_b(:, :, k) = rotationMatrix_generator(ROTOR.azimutal_positions(k), 0, 0, "DEG");
+    ROTOR.R_b_r(:, :, k) = inv(ROTOR.R_r_b(:, :, k));
 end
-
 
 for k = 1:ROTOR.azimutal_points
     for i = 1:length(BLADE.pos_sec)
@@ -91,25 +83,37 @@ for k = 1:ROTOR.azimutal_points
     end
 end
 
-ROTOR.disk_area = pi * (BLADE.Span + BLADE.RootBladeDistance)^2;
+[ROTOR.II, ROTOR.II_inv] = inertia_tensor(ROTOR, BLADE);
+
+
+ROTOR.disk_area = pi * (BLADE.Span^2 + 2*BLADE.Span*BLADE.RootBladeDistance);
+
+ROTOR.operation_mode = "Rotor Off";
 
 VEHICLE.mass = ROTOR.mass + VEHICLE.mass_payload;
 
 % Earth Properties
 EARTH.R = inData.earth_radius;
+
 EARTH.M = inData.earth_mass;
 EARTH.G = inData.earth_gravitational_constant;
 
-% Extract and calculate derived parameters
-SIM.solver = inData.sim_ode_solver;
-SIM.atmosphereModelSelector = inData.sim_atmos_model;
+% SIM 
 
 SIM.init_vaues = inData.sim_res_val ;
+
+SIM.atmosphereModelSelector = inData.sim_atmos_model;
+
 SIM.AerodynamicModelSelector = inData.sim_aero_model;
+
+SIM.solver = inData.sim_ode_solver;
 
 SIM.blade_integrator = inData.sim_blade_integrator;
 
-% Time
+SIM.debbug_cmd = false;
+
+% TIME
+
 TIME.time_limit_sim = inData.sim_time_limit;
 
 TIME.dt = inData.sim_time_step;  
@@ -119,8 +123,6 @@ TIME.t_deploy_rotor = inData.sim_deploy_time;
 TIME.clock = 0;
 
 TIME.stop_flag = false;
-
-
 
 
 end

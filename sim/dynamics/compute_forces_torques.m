@@ -51,8 +51,7 @@ rotorIsOpen = false;
 rotor_distribution_data = RotorAzimutalDistribution([], []);
 
 % Activate rotor if deployment time has passed
-if TIME.clock >= TIME.t_deploy_rotor && ROTOR.openRotor
-    rotorIsOpen = true;
+if ROTOR.rotorIsOpen
     [F_rotor, T_rotor, rotor_distribution_data] = ...
         compute_rotor_force(SIM, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
 end
@@ -61,17 +60,11 @@ end
 F_total = F_gravity + F_drag_cilinder + F_rotor;
 
 % Total torque includes only rotor torque (x and y components kept, z zeroed)
-T_total = T_rotor;
-T_total(3) = 0;
+% T_total = T_rotor;
+% T_total(3) = 0;
+T_total = [0;0;0];
 
 % Return only the z-component of rotor torque as scalar
 T_rotor = T_rotor(3);
-
-% Debug print if enabled
-if SIM.debbug_cmd
-    fprintf("\tF = %.3f %.3f %.3f | F_g = %.3f %.3f %.3f | F_r = %.3f %.3f %.3f | T = %.3f %.3f %.3f | T_r = %.3f\n", ...
-        F_total, F_gravity, F_rotor, T_total, T_rotor);
-end
-
 end
 

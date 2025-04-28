@@ -33,24 +33,25 @@ function [OUTPUT, rotor_data] = RK4(SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH)
 OUTPUT = init_sim_outputs();
 
 % Initialize vehicle and rotor state
-VEHICLE.velocity = VEHICLE.InitVelocity;
+VEHICLE.velocity = VEHICLE.InitVelocity; VEHICLE.prev_velocity = VEHICLE.velocity;
+
 VEHICLE.position = VEHICLE.InitPosition;
 VEHICLE.orientation = VEHICLE.InitOrientation;
 VEHICLE.ang_velocity = VEHICLE.InitAngularVelocity;
 ROTOR.velocity = 0;
-ROTOR.induced_velocity = 0;
+
+ROTOR.induced_velocity = 0; ROTOR.prev_induced_velocity = 0;
 
 % Store per-timestep rotor data (if active)
 rotor_data_vec = [];
 rotor_data_time = [];
 
-% Constants for RK4
 var_constants = [1, 1/2, 1/2, 1];
 
 % Main integration loop
 while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
-    fprintf(">> [%.2f] Altitude: %.4f [V = %.2f | %.2f RPM]\n", ...
+    fprintf(">> [%.2f] Altitude: %.4f [V = %.2f | %.2f RPM]\n\n", ...
         TIME.clock, VEHICLE.position(3), VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
 
     % Get atmospheric conditions at current state
@@ -66,35 +67,45 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         'rotor_induced_velocity', ROTOR.induced_velocity, ...
         'clock', TIME.clock);
 
-    vi_convergency = false;
-    counter_vi = 1;
+    ROTOR.vi_convergency = false;
+    ROTOR.counter_vi = 1;
+
+    if TIME.clock >= TIME.t_deploy_rotor && ROTOR.openRotor
+        ROTOR.rotorIsOpen = true;
+    end
 
     % Loop for convergence of induced velocity if rotor is open
-    while ~vi_convergency
-
+    while ~ROTOR.vi_convergency
+        
         % RK4 integration matrices
         k = zeros(3, 4); % linear acceleration
         l = zeros(3, 4); % linear velocity
         m = zeros(3, 4); % angular acceleration
         n = zeros(3, 4); % angular velocity
         p = zeros(1, 4); % rotor acceleration
-
+        
         for i = 1:4
+
+             fprintf("\t{%d}\n", i);
             if i == 1
                 VEHICLE.velocity = CURRENT.vehicle_velocity;
                 VEHICLE.ang_velocity = CURRENT.vehicle_ang_velocity;
                 ROTOR.velocity = CURRENT.rotor_velocity;
                 SIM.debbug_cmd = false;
             else
-                VEHICLE.velocity = CURRENT.vehicle_velocity + var_constants(i-1) * k(:, i-1);
-                VEHICLE.ang_velocity = CURRENT.vehicle_ang_velocity + var_constants(i-1) * m(:, i-1);
-                ROTOR.velocity = CURRENT.rotor_velocity + var_constants(i-1) * p(i-1);
+                VEHICLE.velocity = CURRENT.vehicle_velocity + var_constants(i) * k(:, i-1);
+                VEHICLE.ang_velocity = CURRENT.vehicle_ang_velocity + var_constants(i) * m(:, i-1);
+                ROTOR.velocity = CURRENT.rotor_velocity + var_constants(i) * p(i-1);
                 SIM.debbug_cmd = false;
             end
+               
+            fprintf("\t{Inputs } V [%.2f | %.2f | %.2f ] AG [%.2f | %.2f | %.2f ] RV [%.2f] Vi [%.2e]\n", VEHICLE.velocity, VEHICLE.ang_velocity, ROTOR.velocity, ROTOR.induced_velocity)
 
             [F_total, F_rotor, F_gravity, F_drag_cilinder, ...
              T_total, T_rotor, rotorIsOpen, rotor_distribution_data] = ...
                 compute_forces_torques(SIM, TIME, VEHICLE, ROTOR, BLADE, ATMOSPHERE, EARTH);
+
+            fprintf("\t{Outputs} F [%.2f %.2f %.2f] | T [%.2f %.2f %.2f] | Fr [%.2f %.2f %.2f] | Tr %.2f \n", F_total, T_total, F_rotor, T_rotor)
 
             % Rotation matrix for Euler angle derivatives
             phi = VEHICLE.orientation(1);
@@ -108,22 +119,23 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
             k(:, i) = k(:, i) * TIME.dt;
             m(:, i) = m(:, i) * TIME.dt;
-            p(i) = (T_rotor / ROTOR.II(3, 3)) * TIME.dt;           
+            p(i) = (T_rotor / ROTOR.II(3, 3)) * TIME.dt;             
 
             if i == 1
                 l(:, i) = VEHICLE.velocity;
                 n(:, i) = RR * VEHICLE.ang_velocity;
             else
-                l(:, i) = VEHICLE.velocity + var_constants(i-1) * k(:, i-1);
-                n(:, i) = RR * VEHICLE.ang_velocity + var_constants(i-1) * m(:, i-1);
+                l(:, i) = VEHICLE.velocity + var_constants(i) * k(:, i-1);
+                n(:, i) = RR * VEHICLE.ang_velocity + var_constants(i) * m(:, i-1);
             end
 
             l(:, i) = l(:, i) * TIME.dt;
             n(:, i) = n(:, i) * TIME.dt;
 
+            fprintf("\t{RK4    } K [%.2f | %.2f | %.2f ] L [%.2f | %.2f | %.2f ] M [%.2f | %.2f | %.2f] N [%.2f | %.2f | %.2f ] P [%.2f ]\n\n", k(:, i), l(:, i), m(:, i), n(:, i) , p(i))
+
             % Save output at the first RK4 stage
-            if i == 1
-          
+            if i == 1          
                 VEHICLE.acceleration = k(:, i);
                 ROTOR.acceleration = m(:, i);
 
@@ -134,33 +146,60 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
                     rotor_data_time = [rotor_data_time TIME.clock];
                 end
             end
-        end
+        end                
+        
+        if ROTOR.rotorIsOpen          
 
-        % Final RK4 state updates
-        VEHICLE.velocity = CURRENT.vehicle_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
-        VEHICLE.position = CURRENT.vehicle_position + (1/6) * (l(:,1) + 2*l(:,2) + 2*l(:,3) + l(:,4));
-        VEHICLE.ang_velocity = CURRENT.vehicle_ang_velocity + (1/6) * (m(:,1) + 2*m(:,2) + 2*m(:,3) + m(:,4));
-        VEHICLE.orientation  = CURRENT.vehicle_orientation  + (1/6) * (n(:,1) + 2*n(:,2) + 2*n(:,3) + n(:,4));
-        ROTOR.velocity = CURRENT.rotor_velocity + (1/6) * (p(1) + 2*p(2) + 2*p(3) + p(4));
+            % Compute new induced velocity if rotor is active
+            [ROTOR.induced_velocity, ROTOR.operation_mode] = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE);
 
-        % Compute new induced velocity if rotor is active
-        if rotorIsOpen
-            ROTOR.induced_velocity = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE, BLADE, F_rotor);
-        end
+            %  RK4 velocity state updates
+            VEHICLE.velocity = VEHICLE.prev_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
+        
+            % Check for convergence of induced velocity
+            ROTOR = check_induced_velocity_convergency(CURRENT, VEHICLE, ROTOR);     
 
-        % Check for convergence of induced velocity
-        if rotorIsOpen
-            [vi_convergency, counter_vi] = check_induced_velocity_convergency(CURRENT, VEHICLE, ROTOR, counter_vi);
+            VEHICLE.prev_velocity = VEHICLE.velocity;
+            ROTOR.prev_induced_velocity = ROTOR.induced_velocity;
+
         else
-            vi_convergency = true;
+            ROTOR.vi_convergency = true;
         end
+
     end
+
+    if ~ROTOR.rotorIsOpen
+        VEHICLE.prev_velocity = VEHICLE.velocity;
+        VEHICLE.velocity = CURRENT.vehicle_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
+    end
+
+    % Final RK4 state updates
+    VEHICLE.position = CURRENT.vehicle_position + (1/6) * (l(:,1) + 2*l(:,2) + 2*l(:,3) + l(:,4));
+    VEHICLE.ang_velocity = CURRENT.vehicle_ang_velocity + (1/6) * (m(:,1) + 2*m(:,2) + 2*m(:,3) + m(:,4));
+    VEHICLE.orientation  = CURRENT.vehicle_orientation  + (1/6) * (n(:,1) + 2*n(:,2) + 2*n(:,3) + n(:,4));
+    ROTOR.velocity = CURRENT.rotor_velocity + (1/6) * (p(1) + 2*p(2) + 2*p(3) + p(4));  
+
+    % Print Current and Updated State
+    % fprintf("------ Time Step Summary ------\n");
+    % fprintf("Time: %.2f s\n", TIME.clock);
+    % fprintf("Initial Position: [%.4f %.4f %.4f] m\n", CURRENT.vehicle_position);
+    % fprintf("New Position:     [%.4f %.4f %.4f] m\n", VEHICLE.position);
+    % fprintf("Initial Velocity: [%.4f %.4f %.4f] m/s\n", CURRENT.vehicle_velocity);
+    % fprintf("New Velocity:     [%.4f %.4f %.4f] m/s\n", VEHICLE.velocity);
+    % fprintf("Initial Orientation: [%.4f %.4f %.4f] deg\n", CURRENT.vehicle_orientation);
+    % fprintf("New Orientation:     [%.4f %.4f %.4f] deg\n", VEHICLE.orientation);
+    % fprintf("Initial Angular Velocity: [%.4f %.4f %.4f] deg/s\n", CURRENT.vehicle_ang_velocity);
+    % fprintf("New Angular Velocity:     [%.4f %.4f %.4f] deg/s\n", VEHICLE.ang_velocity);
+    % fprintf("Initial Rotor Velocity: %.4f rad/s\n", CURRENT.rotor_velocity);
+    % fprintf("New Rotor Velocity:     %.4f rad/s\n", ROTOR.velocity);
+    % fprintf("-------------------------------\n\n");
+
+    % Update visual progress bar
+    update_progressBar(VEHICLE, ROTOR);
 
     % Advance simulation time
     TIME = time_controller(TIME);
 
-    % Update visual progress bar
-    update_progressBar(VEHICLE, ROTOR, rotorIsOpen);
 end
 
 % Final output for rotor-related data

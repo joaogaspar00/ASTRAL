@@ -42,6 +42,11 @@ function [F_rotor, T_rotor, rotor_distribution_data] = compute_rotor_force(SIM, 
 
     % Loop over all azimuthal positions
     for k = 1:ROTOR.azimutal_points   
+
+
+        if SIM.debbug_cmd
+            fprintf("\n\t\tBlade position = %.2f\n", ROTOR.azimutal_positions(k));
+        end
         
         % Rotation matrix from inertial frame to blade frame
         R_i_b = ROTOR.R_i_r * ROTOR.R_r_b(:, :, k);
@@ -54,9 +59,7 @@ function [F_rotor, T_rotor, rotor_distribution_data] = compute_rotor_force(SIM, 
         [F_blade(:, k), T_blade(:, k), blade_distribution] = compute_blade_force(k, SIM, VEHICLE, ROTOR, BLADE, ATMOSPHERE);
 
         % Optional debug output
-        if SIM.debbug_cmd
-            fprintf("\t\t[%.2f] F_b = %.3f %.3f %.3f | T_b =  %.3f %.3f %.3f \n", ROTOR.azimutal_positions(k), F_blade(:, k), T_blade(:, k));
-        end
+        
 
         % Collect azimuthal force/torque data
         blade_distribution_data = [blade_distribution_data blade_distribution];

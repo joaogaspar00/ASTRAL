@@ -51,8 +51,7 @@ BLADE.theta = twist_distribution(BLADE);
 
 ROTOR.mass = BLADE.mass * ROTOR.Nb;
 
-ROTOR.II = inertia_tensor(BLADE);
-ROTOR.II_inv = inv(ROTOR.II);
+
 ROTOR.azimutal_positions = azimutalDescretization(ROTOR.azimutal_points, 0);
 
 for k = 1:ROTOR.azimutal_points    
@@ -67,7 +66,8 @@ for k = 1:ROTOR.azimutal_points
     end
 end
 
-
+ROTOR.II = inertia_tensor(ROTOR, BLADE);
+ROTOR.II_inv = inv(ROTOR.II);
 
 
 VEHICLE.mass = ROTOR.mass + VEHICLE.mass_payload;

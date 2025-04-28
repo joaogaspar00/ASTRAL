@@ -19,7 +19,7 @@ function [ATMOSPHERE] = atmosphereModel_selector(TIME, SIM, VEHICLE)
     end
    
 
-    ATMOSPHERE.wind_velocity = [0; 0; 0.5];
+    ATMOSPHERE.wind_velocity = [0; 0; 0];
 
     ATMOSPHERE.temperature = T;
     ATMOSPHERE.pressure = p;

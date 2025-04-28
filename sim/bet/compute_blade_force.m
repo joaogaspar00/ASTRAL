@@ -53,13 +53,18 @@ U_P = zeros(1, BLADE.No_elements+1); % Axial (parallel) velocity
 v_i = zeros(1, BLADE.No_elements+1); % Induced velocity at each section
 flow_mode = zeros(1, BLADE.No_elements+1); % Forward or reverse flow flag
 
-dF_e = zeros(3, BLADE.No_elements+1); % Element force in element frame
 dF_a = zeros(3, BLADE.No_elements+1); % Element force in aerodynamic frame
+dF_e = zeros(3, BLADE.No_elements+1); % Element force in element frame
+dF_b = zeros(3, BLADE.No_elements+1); % Element force in blade frame
+dF_r = zeros(3, BLADE.No_elements+1); % Element force in rotor frame
+dF_i = zeros(3, BLADE.No_elements+1); % Element force in inertial frame
+
 dT_r = zeros(3, BLADE.No_elements+1); % Element torque in rotor frame
 
 % Rotor angular velocity vector
 vec_angular_velocity = [0; 0; ROTOR.velocity];
 
+% fprintf("\n\t\tBlade position - %.2f\n", ROTOR.azimutal_positions(index_blade))
 % Loop over all blade elements (radial sections)
 for i = 1:length(BLADE.pos_sec)
 
@@ -110,6 +115,10 @@ for i = 1:length(BLADE.pos_sec)
 
     % Force vector in aerodynamic frame (X = Drag, Z = Lift)
     dF_a(:, i) = [dD(i); 0; dL(i)];
+
+    
+    % fprintf("\t\t\t [%d|%d] Vi = %.2f | U [%.2f %.2f %.2f] | |U| = %.2f | Theta = %.2f | Phi = %.2f | Alpha = %.2f |  Re = %.2f |  Ma = %.2f |  Cl = %.2f |  Cd = %.2f\n", ...
+        % i, flow_mode(i), ROTOR.induced_velocity, V_e, total_velocity(i), BLADE.theta(i), phi(i), alpha(i), Re(i), Ma(i), Cl(i), Cd(i))    
 end
 
 % Apply Prandtl tip loss correction if enabled
@@ -122,24 +131,28 @@ end
 % Apply tip correction to aerodynamic forces
 dF_a = f_prandtl .* dF_a ;
 
+% fprintf("\n")
 % Rotate from aerodynamic to element frame
 for i = 1:length(BLADE.pos_sec)
     R_a_e = rotationMatrix_generator(0, phi(:, i), 0, "deg");
+
     dF_e(:, i) = R_a_e * dF_a(:, i);
+
+    dF_b(:, i) = dF_e(:, i);
+
+    dF_r(:, i) = ROTOR.R_b_r(:, :, index_blade) * dF_b(:, i);
+
+    dF_i(:, i) = ROTOR.R_r_i * dF_r(:, i);
+
+    dT_r(:, i) = cross(BLADE.pos_sec_r(:, i, index_blade), dF_r(:, i));
+
+    % fprintf("\t\t\t [%d] dFa [%.2f %.2f %.2f] dFe [%.2f %.2f %.2f] dFb [%.2f %.2f %.2f] dFi [%.2e %.2e %.2e] - dTr [%.2e %.2e %.2e] \n", i, dF_a(:, i), dF_e(:, i), dF_r(:, i), dF_i(:, i), dT_r(:, i));
 end
-
-% Element frame to blade frame (translation only → same orientation)
-dF_b = dF_e;
-
-% Transform to rotor frame
-dF_r = ROTOR.R_b_r(:, :, index_blade) * dF_b;
-
-% Transform to inertial frame
-dF_i = ROTOR.R_r_i * dF_r;
+% fprintf("\n")
 
 % Compute torque from position vector and force in rotor frame
 for i = 1:length(BLADE.pos_sec)
-    dT_r(:, i) = cross(BLADE.pos_sec_r(:, i, index_blade), dF_r(:, i));
+    
 end
 
 % Integrate forces and torques over the blade
