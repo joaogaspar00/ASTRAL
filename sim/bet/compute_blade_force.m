@@ -93,7 +93,7 @@ for i = 1:length(BLADE.pos_sec)
     [alpha(i), phi(i), element_state(i)] = getFlowAngles(U_T(i), U_P(i), BLADE.theta(i));
 
     % Compute Mach and Reynolds numbers
-    Ma(i) = MachNumber_func(total_velocity(i), ATMOSPHERE);
+    Ma(i) = MachNumber(total_velocity(i), ATMOSPHERE);
     Re(i) = ReynoldsNumber_func(total_velocity(i), BLADE, ATMOSPHERE);
 
     % Retrieve aerodynamic coefficients

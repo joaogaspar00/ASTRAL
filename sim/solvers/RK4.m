@@ -58,7 +58,7 @@ var_constants = [1, 1/2, 1/2, 1];
 % Main integration loop
 while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
-    fprintf(">> [%.2f] Altitude: %.4f [V = %.2f | %.2f RPM]\n\n", ...
+    fprintf(">> [%.2f] Altitude: %.4f [V = %.2f | %.2f RPM]\n", ...
         TIME.clock, VEHICLE.position(3), VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
 
     % Save current state
@@ -80,13 +80,17 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
     % Restart variables for vi convergency
     ROTOR.vi_convergency = false;
     ROTOR.vi_iter_counter = 0;
+   
+    % Restart vectors for vi convergency
+    VEHICLE.conv_velocity_vec = [];
+    ROTOR.conv_velocity_vec = [];
 
     % Check rotor operation start time
     if TIME.clock >= TIME.t_deploy_rotor && ROTOR.openRotor
         ROTOR.rotorIsOpen = true;
     end
 
-    % Loop for convergence of induced velocity if rotor is open
+    % Loop for convergence of rotor's induced velocity if rotor is open
     while ~ROTOR.vi_convergency
         
         % RK4 integration matrices
@@ -165,28 +169,34 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
             end
         end                
         
-        if ROTOR.rotorIsOpen        
+        % if rotor is not open than vi doed not need to be converged or
+        % converged then flag turns true and the next time iteration should
+        % be computed
+        if ~ROTOR.rotorIsOpen  
+            ROTOR.vi_convergency = true;
+        else
 
-            % Compute new induced velocity if rotor is active
+            % RK4 vehicle velocity and rotor velocity state updates 
+            VEHICLE.velocity = PREVIOUS_STATE.vehicle_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
+            ROTOR.velocity = PREVIOUS_STATE.rotor_velocity + (1/6) * (p(1) + 2*p(2) + 2*p(3) + p(4));
+
+            % Compute the rotor's induced velocity 
             ROTOR = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE);
 
-            %  RK4 velocity state updates
-            VEHICLE.velocity = PREVIOUS_STATE.vehicle_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
-        
             % Check for convergence of induced velocity
             ROTOR = check_induced_velocity_convergency(PREVIOUS_STATE, VEHICLE, ROTOR);     
 
             % if has not reach convergency
             if ~ROTOR.vi_convergency
-                
-                VEHICLE.prev_velocity = VEHICLE.velocity;
-                ROTOR.prev_induced_velocity = ROTOR.induced_velocity;
 
-                ROTOR.vi_array = [ROTOR.vi_array, ROTOR.induced_velocity];
-            end
+                VEHICLE.conv_velocity_vec = [VEHICLE.conv_velocity_vec  VEHICLE.velocity];
+                ROTOR.conv_velocity_vec = [ROTOR.conv_velocity_vec ROTOR.velocity]; 
 
-        else
-            ROTOR.vi_convergency = true;
+                % vi convergency algorithm
+                [VEHICLE, ROTOR] = vi_convergency_helper(VEHICLE, ROTOR);
+
+            end        
+            
         end
 
     end
@@ -194,18 +204,20 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
     % When vi has converged save AUX_OUTPUT as OUTPUT
      OUTPUT = AUX_OUTPUT;
 
+    % If the rotor is not open then the vehicle position is 
     if ~ROTOR.rotorIsOpen
         VEHICLE.velocity = PREVIOUS_STATE.vehicle_velocity + (1/6) * (k(:,1) + 2*k(:,2) + 2*k(:,3) + k(:,4));
+
+        % In this case the rotor velocity is 0 by default to save
+        % computational effort (small point, but still...)
+        ROTOR.velocity = 0;  
     end
 
-    % Final RK4 state updates
+    % Other solver updtades using RK4 method
     VEHICLE.position = PREVIOUS_STATE.vehicle_position + (1/6) * (l(:,1) + 2*l(:,2) + 2*l(:,3) + l(:,4));
-
     VEHICLE.ang_velocity = PREVIOUS_STATE.vehicle_ang_velocity + (1/6) * (m(:,1) + 2*m(:,2) + 2*m(:,3) + m(:,4));
     VEHICLE.orientation  = PREVIOUS_STATE.vehicle_orientation  + (1/6) * (n(:,1) + 2*n(:,2) + 2*n(:,3) + n(:,4));
-
-    ROTOR.velocity = PREVIOUS_STATE.rotor_velocity + (1/6) * (p(1) + 2*p(2) + 2*p(3) + p(4));  
-  
+      
     % Update visual progress bar
     update_progressBar(VEHICLE, ROTOR);
 
@@ -218,7 +230,4 @@ end
 rotor_data.data = rotor_data_vec;
 rotor_data.time = rotor_data_time;
 
-disp("aquiii")
-disp(rotor_data)
-disp("aLiii")
 end

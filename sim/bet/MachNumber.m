@@ -26,7 +26,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function Ma = MachNumber_func(V, ATMOSPHERE)
+function Ma = MachNumber(V, ATMOSPHERE)
 
 Ma = V / (sqrt( 1.4 * 287.053* ATMOSPHERE.temperature));
 

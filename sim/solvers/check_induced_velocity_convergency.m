@@ -12,28 +12,23 @@ old_UP = old_vel(3) - ROTOR.prev_induced_velocity;
 new_vel = R_i_r * VEHICLE.velocity;
 new_UP = new_vel(3) - ROTOR.induced_velocity;
 
-
-% fprintf("\t\t[%s]  V_old [%.2f %.2f %.2f] | V_new [%.2f %.2f %.2f] -- vi_old = %.5f | old_UP = %.2f | vi_new = %.5f | new_UP = %.2f | diff = %.10e\n\n", ...
-%         ROTOR.operation_mode, VEHICLE.prev_velocity, VEHICLE.velocity, ROTOR.prev_induced_velocity, old_UP, ROTOR.induced_velocity, new_UP, abs(old_UP - new_UP));
-
-
 ROTOR.vi_error = abs(old_UP - new_UP);
 
-if abs(old_UP - new_UP) < 0.1
+if ROTOR.vi_error < 1e-2
 
     ROTOR.vi_convergency = true;
 
 else
 
-    if ROTOR.vi_iter_counter == 1
-        return;
+    ROTOR.vi_convergency = false;
+    ROTOR.vi_iter_counter = ROTOR.vi_iter_counter + 1;
+    fprintf("\t [%d] Error: %.5e \n", ROTOR.vi_iter_counter, ROTOR.vi_error)
 
-    else
-        ROTOR.vi_convergency = false;
-        ROTOR.vi_iter_counter = ROTOR.vi_iter_counter + 1;
+    % Limit vi convergency loop no. of iterations
+    if ROTOR.vi_iter_counter == 10
+         ROTOR.vi_convergency = true;
     end
-     
+    
 end
-
 
 end

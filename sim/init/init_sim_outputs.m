@@ -37,6 +37,7 @@ OUTPUT.rotor_acceleration = [];
 OUTPUT.rotor_induced_velocity = [];
 OUTPUT.rotor_operation_mode = [];
 OUTPUT.rotor_vi_error = [];
+OUTPUT.rotor_vi_iter_counter = [];
 
 OUTPUT.wind_velocity = [];
 

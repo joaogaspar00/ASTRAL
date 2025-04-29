@@ -23,9 +23,10 @@ OUTPUT.vehicle_orientation = [OUTPUT.vehicle_orientation; VEHICLE.orientation'];
 
 OUTPUT.rotor_acceleration = [OUTPUT.rotor_acceleration;  ROTOR.acceleration];
 OUTPUT.rotor_velocity = [OUTPUT.rotor_velocity; ROTOR.velocity'];
-OUTPUT.rotor_induced_velocity = [OUTPUT.rotor_induced_velocity; ROTOR.induced_velocity'];
 OUTPUT.rotor_operation_mode = [OUTPUT.rotor_operation_mode; ROTOR.operation_mode'];
+OUTPUT.rotor_induced_velocity = [OUTPUT.rotor_induced_velocity; ROTOR.induced_velocity'];
 OUTPUT.rotor_vi_error = [OUTPUT.rotor_vi_error; ROTOR.vi_error'];
+OUTPUT.rotor_vi_iter_counter = [OUTPUT.rotor_vi_iter_counter; ROTOR.vi_iter_counter'];
 
 OUTPUT.temperature = [OUTPUT.temperature; ATMOSPHERE.temperature];
 OUTPUT.pressure = [OUTPUT.pressure; ATMOSPHERE.pressure];
