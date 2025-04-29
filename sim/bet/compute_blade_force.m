@@ -134,7 +134,10 @@ dF_a(3, :) = f_prandtl .* dF_a(3, :) ;
 % fprintf("\n")
 % Rotate from aerodynamic to element frame
 for i = 1:length(BLADE.pos_sec)
-    R_a_e = rotationMatrix_generator(0, -phi(:, i), 0, "deg");
+    R_a_e = rotationMatrix_generator(0, phi(:, i), 0, "deg");
+
+    % disp(phi(:, i))
+    % disp(R_a_e)
 
     dF_e(:, i) = R_a_e * dF_a(:, i);
 

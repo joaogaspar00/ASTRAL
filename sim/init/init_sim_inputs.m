@@ -65,6 +65,7 @@ BLADE.mass =  0.4 * (BLADE.Span^(2.6));
 
 BLADE.theta = twist_distribution(BLADE);
 
+
 ROTOR.mass = BLADE.mass * ROTOR.Nb;
 ROTOR.azimutal_points = inData.rotor_azimutal_points;
 
@@ -88,7 +89,8 @@ end
 
 ROTOR.disk_area = pi * (BLADE.Span^2 + 2*BLADE.Span*BLADE.RootBladeDistance);
 
-ROTOR.operation_mode = "Rotor Off";
+ROTOR.operation_mode = 0;
+ROTOR.vi_error = 0;
 
 VEHICLE.mass = ROTOR.mass + VEHICLE.mass_payload;
 

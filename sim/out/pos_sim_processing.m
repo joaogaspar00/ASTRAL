@@ -6,13 +6,13 @@
 % Version: 1.0
 %
 % Description:
-% This function performs post-processing on the simulation output.
+% This function performs post-processing on the simulation OUTPUT.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function OUTPUT = pos_sim_processing(OUTPUT, rotor_data)
 
-    OUTPUT.height = OUTPUT.vehicle_position(:, 3);
+    OUTPUT.rotor_rpm = OUTPUT.rotor_velocity * 60/(2*pi);
 
     OUTPUT.rotor_data = rotor_data;
 

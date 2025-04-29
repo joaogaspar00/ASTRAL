@@ -1,11 +1,11 @@
-function [induced_velocity, rotor_operation_mode] = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE)
+function ROTOR = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE)
 
 R_i_r = rotationMatrix_generator(VEHICLE.orientation(1), VEHICLE.orientation(2), VEHICLE.orientation(3), "deg");
 V_r = R_i_r * VEHICLE.velocity;
 
 if ROTOR.velocity == 0
-    induced_velocity = 0;
-    rotor_operation_mode = "Rotor Off";
+    ROTOR.induced_velocity = 0;
+    ROTOR.operation_mode = "Rotor Off";
     return;
 end
 
@@ -15,13 +15,13 @@ Vc = V_r(3);
 
 if Vc/vh < -2
 
-    rotor_operation_mode = "WBS";
+    ROTOR.operation_mode = 0;
     
-    induced_velocity = -vh * (Vc/(2*vh) + sqrt((Vc/(2*vh))^2 - 1));
+    ROTOR.induced_velocity = -vh * (Vc/(2*vh) + sqrt((Vc/(2*vh))^2 - 1));
 
 else
-   
-    rotor_operation_mode = "VRS"; 
+    
+    ROTOR.operation_mode = 1;
 
     k1 = 1.125;
     k2 = -1.372; 
@@ -32,10 +32,8 @@ else
 
     vr_vi = 1 + k1 * vr_Vc + k2 * vr_Vc^2 + k3 * vr_Vc^3 + k4 * vr_Vc^4;
 
-    induced_velocity = vh * vr_vi;
+    ROTOR.induced_velocity = vh * vr_vi;
 
 end
-
-induced_velocity = 0;
 
 end
