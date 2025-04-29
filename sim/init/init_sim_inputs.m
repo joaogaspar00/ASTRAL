@@ -89,7 +89,7 @@ end
 
 ROTOR.disk_area = pi * (BLADE.Span^2 + 2*BLADE.Span*BLADE.RootBladeDistance);
 
-ROTOR.operation_mode = 0;
+ROTOR.operation_mode = -1;
 ROTOR.vi_error = 0;
 
 VEHICLE.mass = ROTOR.mass + VEHICLE.mass_payload;

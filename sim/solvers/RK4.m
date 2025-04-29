@@ -58,8 +58,8 @@ var_constants = [1, 1/2, 1/2, 1];
 % Main integration loop
 while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
-    fprintf(">> [%.2f] Altitude: %.4f [V = %.2f | %.2f RPM]\n", ...
-        TIME.clock, VEHICLE.position(3), VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
+    fprintf(">> [%.2f] Altitude: %.4f [%d | %.2f RPM]\n", ...
+        TIME.clock, VEHICLE.position(3), ROTOR.operation_mode, ROTOR.velocity * 60/(2*pi));
 
     % Save current state
     PREVIOUS_STATE = struct( ...
@@ -102,16 +102,17 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         
         for i = 1:4
 
-            % fprintf("\t{%d}\n", i);
             
             if i == 1
-                VEHICLE.velocity = PREVIOUS_STATE.vehicle_velocity;
+                VEHICLE.velocity = VEHICLE.velocity;                
+                ROTOR.velocity = ROTOR.velocity;
+
                 VEHICLE.ang_velocity = PREVIOUS_STATE.vehicle_ang_velocity;
-                ROTOR.velocity = PREVIOUS_STATE.rotor_velocity;
             else
-                VEHICLE.velocity = PREVIOUS_STATE.vehicle_velocity + var_constants(i) * k(:, i-1);
+                VEHICLE.velocity = VEHICLE.velocity + var_constants(i) * k(:, i-1);                
+                ROTOR.velocity = ROTOR.velocity + var_constants(i) * p(i-1);
+
                 VEHICLE.ang_velocity = PREVIOUS_STATE.vehicle_ang_velocity + var_constants(i) * m(:, i-1);
-                ROTOR.velocity = PREVIOUS_STATE.rotor_velocity + var_constants(i) * p(i-1);
             end
                
             % fprintf("\t{Inputs } V [%.2f | %.2f | %.2f ] AG [%.2f | %.2f | %.2f ] RV [%.2f] Vi [%.2e]\n", VEHICLE.velocity, VEHICLE.ang_velocity, ROTOR.velocity, ROTOR.induced_velocity)
