@@ -26,8 +26,8 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function Re = ReynoldsNumber_func(V, BLADE, ATMOSPHERE)
+function Re = ReynoldsNumber_func(index, V, BLADE, ATMOSPHERE)
 
-    Re = ATMOSPHERE.density * V * BLADE.chord / ATMOSPHERE.dynamic_viscosity;
+    Re = ATMOSPHERE.density * V * BLADE.chord(index) / ATMOSPHERE.dynamic_viscosity;
 
 end

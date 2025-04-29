@@ -1,4 +1,4 @@
-function plot_blade_3D(airfoil, Ne, R, e, c, twist_rate, root_theta)
+function plot_blade_3D(airfoil, Ne, R, e, c, lambda, twist_rate, root_theta)
     % Função para plotar perfis ao longo de uma pá de rotor em 3D com gradiente apenas em tons de azul
     % Parâmetros:
     % airfoil - Identificação do perfil aerodinâmico (não usado no código atual)
@@ -23,8 +23,6 @@ function plot_blade_3D(airfoil, Ne, R, e, c, twist_rate, root_theta)
         error("O arquivo de coordenadas deve ter duas colunas (x e y).");
     end
 
-    % Escala as coordenadas pela corda
-    coord = c * coord(2:end, :);
 
     % Gera as posições dos elementos ao longo do raio
     pos_el = linspace(e, e + R, Ne);
@@ -34,6 +32,9 @@ function plot_blade_3D(airfoil, Ne, R, e, c, twist_rate, root_theta)
     % Calcula os ângulos theta
     for i = 1:length(pos_el)
         theta(i) = twist_rate * (pos_el(i) - e) + root_theta;
+
+        cy = c * (1 - (1 - lambda) * (pos_el(i) - e)/R);
+        coord_dy{i} = cy * coord(2:end, :);
     end
 
     % Inicializa a figura
@@ -48,8 +49,8 @@ function plot_blade_3D(airfoil, Ne, R, e, c, twist_rate, root_theta)
         Rot = rotationMatrix_generator(-theta(i), 0, 0, "DEG");
 
         % Ajusta as coordenadas para a posição ao longo do raio
-        x = coord(:, 1); % Mantém o perfil em x
-        y = coord(:, 2); % Mantém o perfil em y
+        x = coord_dy{i}(:, 1);
+        y = coord_dy{i}(:, 2);
         z = pos_el(i) * ones(size(x)); % Define a posição no eixo z
 
         % Aplica a rotação em cada par de pontos (x, y)

@@ -94,7 +94,7 @@ for i = 1:length(BLADE.pos_sec)
 
     % Compute Mach and Reynolds numbers
     Ma(i) = MachNumber(total_velocity(i), ATMOSPHERE);
-    Re(i) = ReynoldsNumber_func(total_velocity(i), BLADE, ATMOSPHERE);
+    Re(i) = ReynoldsNumber_func(i, total_velocity(i), BLADE, ATMOSPHERE);
 
     % Retrieve aerodynamic coefficients
     if total_velocity(i) == 0 || isnan(total_velocity(i))
@@ -110,8 +110,8 @@ for i = 1:length(BLADE.pos_sec)
     end
 
     % Compute elemental lift and drag forces
-    dL(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cl(i) * BLADE.chord;
-    dD(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cd(i) * BLADE.chord;
+    dL(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cl(i) * BLADE.chord(i);
+    dD(i) = 0.5 * ATMOSPHERE.density * (total_velocity(i)^2) * Cd(i) * BLADE.chord(i);
 
     % Force vector in aerodynamic frame (X = Drag, Z = Lift)
     dF_a(:, i) = [dD(i); 0; dL(i)];

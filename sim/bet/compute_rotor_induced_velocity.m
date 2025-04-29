@@ -28,11 +28,12 @@ else
     k3 = 1.718;
     k4 = -0.655;
 
-    vr_Vc = Vc/vh;
+    vr_Vc = -Vc/vh;
 
     vr_vi = 1 + k1 * vr_Vc + k2 * vr_Vc^2 + k3 * vr_Vc^3 + k4 * vr_Vc^4;
 
     ROTOR.induced_velocity = vh * vr_vi;
+
 
 end
 

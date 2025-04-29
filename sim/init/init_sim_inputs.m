@@ -32,11 +32,12 @@ BLADE.tc = inData.blade_airfoil_tickness;
 
 BLADE.No_elements = inData.blade_no_points;
 
-BLADE.theta = inData.blade_theta;
+BLADE.root_theta = inData.blade_theta;
 
 BLADE.twist_rate = inData.blade_twist_rate;
 
-BLADE.chord = inData.blade_chord;
+BLADE.root_chord = inData.blade_chord;
+BLADE.lambda_chord = inData.blade_lambda_chord;
 
 BLADE.prandtlTipLosses = inData.rotor_tipLosses_mode;
 
@@ -51,19 +52,22 @@ ROTOR.induced_velocity = 0;
 
 % ADDITIONAL PARAMETERS
 
-BLADE.AR = BLADE.Span / BLADE.chord;
 
-BLADE.thickness =  BLADE.tc * BLADE.chord;
+BLADE.AR = BLADE.Span / BLADE.root_chord;
+
+BLADE.thickness =  BLADE.tc * BLADE.root_chord;
 
 BLADE.dy = BLADE.Span / BLADE.No_elements;
-BLADE.dA = BLADE.dy * BLADE.chord;
+
 
 BLADE.pos_sec = (0:BLADE.No_elements) * BLADE.dy + BLADE.RootBladeDistance;
 BLADE.pos_sec = [zeros(1, length(BLADE.pos_sec)); BLADE.pos_sec; zeros(1, length(BLADE.pos_sec))];
 
-BLADE.mass =  0.4 * (BLADE.Span^(2.6));
+BLADE = planform_distribution(BLADE);
 
-BLADE.theta = twist_distribution(BLADE);
+BLADE.dA = BLADE.dy .* BLADE.chord;
+
+BLADE.mass =  0.4 * (BLADE.Span^(2.6));
 
 
 ROTOR.mass = BLADE.mass * ROTOR.Nb;
@@ -125,6 +129,5 @@ TIME.t_deploy_rotor = inData.sim_deploy_time;
 TIME.clock = 0;
 
 TIME.stop_flag = false;
-
 
 end

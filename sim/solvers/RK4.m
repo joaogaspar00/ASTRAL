@@ -58,8 +58,16 @@ var_constants = [1, 1/2, 1/2, 1];
 % Main integration loop
 while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
-    fprintf(">> [%.2f] Altitude: %.4f [%d | %.2f RPM]\n", ...
-        TIME.clock, VEHICLE.position(3), ROTOR.operation_mode, ROTOR.velocity * 60/(2*pi));
+    if ROTOR.operation_mode == -1
+         s_operation_mode = "off";
+    elseif ROTOR.operation_mode == 0
+        s_operation_mode = "wbs";
+    elseif ROTOR.operation_mode == 1
+        s_operation_mode = "vrs";
+    end
+
+    fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.2f RPM]\n", ...
+        TIME.clock, VEHICLE.position(3), s_operation_mode, VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
 
     % Save current state
     PREVIOUS_STATE = struct( ...
