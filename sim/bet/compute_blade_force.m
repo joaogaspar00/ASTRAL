@@ -125,6 +125,9 @@ end
 if BLADE.prandtlTipLosses
     f_prandtl = prandtl_function(phi(1), phi(end), ROTOR, BLADE);
     dF_a(3, :) = f_prandtl .* dF_a(3, :) ;
+else
+    % this lines is used to filled f_prandtl for saving variables
+    f_prandtl = ones(1, length(dF_a(3, :) ));
 end
 
 % Apply tip correction to aerodynamic forces
