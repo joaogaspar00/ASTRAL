@@ -49,6 +49,12 @@ ROTOR.prev_induced_velocity = 0;
 VEHICLE.prev_velocity = VEHICLE.velocity;
 ROTOR.vi_array = [];
 
+% Variables for RK4 time controll
+
+ROTOR.last_velocity = 1e6;
+ROTOR.solver_convergency_counter = 0;
+TIME.convergency_flag = false;
+
 % Store per-timestep rotor data (if active)
 rotor_data_vec = [];
 rotor_data_time = [];
@@ -66,7 +72,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         s_operation_mode = "vrs";
     end
 
-    fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.2f RPM]\n", ...
+    fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.3f RPM]\n", ...
         TIME.clock, VEHICLE.position(3), s_operation_mode, VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
 
     % Save current state
@@ -133,7 +139,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
             % Rotation matrix for Euler angle derivatives
             phi = VEHICLE.orientation(1);
-            theta = VEHICLE.orientation(2);
+            theta = VEHICLE.orientation(2);            
             RR = [1   tand(theta)*sind(phi)   tand(theta)*cosd(phi);
                   0   cosd(phi)               -sind(phi);
                   0   sind(phi)/cosd(theta)   cosd(phi)/cosd(theta)];
@@ -204,10 +210,9 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
                 % vi convergency algorithm
                 [VEHICLE, ROTOR] = vi_convergency_helper(VEHICLE, ROTOR);
 
-            end        
+            end   
             
         end
-
     end
 
     % When vi has converged save AUX_OUTPUT as OUTPUT
@@ -227,11 +232,13 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
     VEHICLE.ang_velocity = PREVIOUS_STATE.vehicle_ang_velocity + (1/6) * (m(:,1) + 2*m(:,2) + 2*m(:,3) + m(:,4));
     VEHICLE.orientation  = PREVIOUS_STATE.vehicle_orientation  + (1/6) * (n(:,1) + 2*n(:,2) + 2*n(:,3) + n(:,4));
       
-    % Update visual progress bar
-    update_progressBar(VEHICLE, ROTOR);
+    [TIME, ROTOR] = RK4_solver_convergency (TIME, ROTOR);
 
     % Advance simulation time
     TIME = time_controller(TIME);
+    
+    % Update visual progress bar
+    update_progressBar(VEHICLE, ROTOR);
 
 end
 

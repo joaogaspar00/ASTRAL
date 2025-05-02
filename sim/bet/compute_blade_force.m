@@ -124,12 +124,11 @@ end
 % Apply Prandtl tip loss correction if enabled
 if BLADE.prandtlTipLosses
     f_prandtl = prandtl_function(phi(1), phi(end), ROTOR, BLADE);
-else
-    f_prandtl = ones(1, length(dF_a));
+    dF_a(3, :) = f_prandtl .* dF_a(3, :) ;
 end
 
 % Apply tip correction to aerodynamic forces
-dF_a(3, :) = f_prandtl .* dF_a(3, :) ;
+
 
 % fprintf("\n")
 % Rotate from aerodynamic to element frame

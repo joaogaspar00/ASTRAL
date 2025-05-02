@@ -14,7 +14,7 @@ new_UP = new_vel(3) - ROTOR.induced_velocity;
 
 ROTOR.vi_error = abs(old_UP - new_UP);
 
-if ROTOR.vi_error < 1e-2
+if ROTOR.vi_error < 5e-2
 
     ROTOR.vi_convergency = true;
 
@@ -22,10 +22,10 @@ else
 
     ROTOR.vi_convergency = false;
     ROTOR.vi_iter_counter = ROTOR.vi_iter_counter + 1;
-    fprintf("\t [%d] Error: %.10e \n", ROTOR.vi_iter_counter, ROTOR.vi_error)
+    % fprintf("\t [%d] Error: %.10e \n", ROTOR.vi_iter_counter, ROTOR.vi_error)
 
     % Limit vi convergency loop no. of iterations
-    if ROTOR.vi_iter_counter == 1
+    if ROTOR.vi_iter_counter == 10
          ROTOR.vi_convergency = true;
     end
     

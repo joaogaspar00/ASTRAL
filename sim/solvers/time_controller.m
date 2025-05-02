@@ -14,10 +14,17 @@
 
 function TIME = time_controller (TIME)
 
-TIME.clock = TIME.clock + TIME.dt;
+
 
 if TIME.clock > TIME.time_limit_sim
     TIME.stop_flag = true;
 end
+
+if TIME.convergency_flag
+    TIME.dt = 1.1 * TIME.dt;
+    TIME.convergency_flag = false;
+end
+
+TIME.clock = TIME.clock + TIME.dt;
 
 end

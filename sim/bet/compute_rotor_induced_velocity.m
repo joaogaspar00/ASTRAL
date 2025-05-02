@@ -23,9 +23,9 @@ else
     
     ROTOR.operation_mode = 1;
 
-    k1 = 1.125;
+    k1 = -1.125;
     k2 = -1.372; 
-    k3 = 1.718;
+    k3 = -1.718;
     k4 = -0.655;
 
     vr_Vc = -Vc/vh;

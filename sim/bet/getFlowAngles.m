@@ -30,9 +30,6 @@ function [alpha, phi, element_state] = getFlowAngles(U_T, U_P, theta)
 % Initialize velocity vector in the effective flow direction (U_T in x, U_P in z)
 U_e = [U_T; 0; U_P];
 
-% Unit vector pointing in the negative x direction (reference for inflow angle)
-ex_e = [-1; 0; 0];
-
 % Check if the velocity vector is zero (no relative motion)
 if norm(U_e) == 0
     % If no velocity, both angles are zero and no flow state
@@ -51,15 +48,36 @@ else
         end
     end
 
-    % Calculate the angle of attack alpha based on the pitch angle and inflow angle
-    if phi >= theta
-        alpha = phi - theta; % Positive angle of attack (relative to blade pitch)
-    else
-        alpha = theta - phi; % Negative angle of attack (relative to blade pitch)
-    end
-    
-    % Set the flow state to 1 indicating that there is flow
+    alpha = theta - phi;
     element_state = 1;
+
+    % %# CASE 1
+    % if theta >= 0 && phi < 0 && phi > -90
+    %     element_state = 1;
+    %     alpha = theta - phi;
+    % 
+    % %# CASE 2
+    % elseif theta < 0 && phi < theta && phi >= -90
+    %     alpha = phi - theta;
+    %     element_state = 2;
+    % 
+    % %# CASE 3 
+    % elseif theta < 0 && theta < phi && phi >= -90
+    %     element_state = 3;
+    %     alpha = theta - phi;
+    % 
+    % %# CASE 4
+    % elseif theta >= 0 && phi < -90
+    %     element_state = 4;
+    %     alpha = theta - phi;
+    % 
+    % %# CASE 5
+    % elseif theta < 0 && phi < -90
+    %     element_state = 4;
+    %     alpha = theta - phi;  
+    % 
+    % end
+
 end
 
 end
