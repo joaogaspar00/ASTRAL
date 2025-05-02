@@ -131,7 +131,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
                
             % fprintf("\t{Inputs } V [%.2f | %.2f | %.2f ] AG [%.2f | %.2f | %.2f ] RV [%.2f] Vi [%.2e]\n", VEHICLE.velocity, VEHICLE.ang_velocity, ROTOR.velocity, ROTOR.induced_velocity)
 
-            [F_total, F_rotor, F_gravity, F_drag_cilinder, ...
+            [F_total, F_rotor, F_gravity, F_drag, ...
              T_total, T_rotor, rotor_distribution_data] = ...
                 compute_forces_torques(SIM, VEHICLE, ROTOR, BLADE, ATMOSPHERE, EARTH);
 
@@ -176,7 +176,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
                 ROTOR.acceleration = p(i);
 
                 AUX_OUTPUT = saveAsOUTPUT(OUTPUT, TIME, VEHICLE, ROTOR, ATMOSPHERE, ...
-                    F_total, F_rotor, F_gravity, F_drag_cilinder, T_total, T_rotor);
+                    F_total, F_rotor, F_gravity, F_drag, T_total, T_rotor);
                 if ROTOR.rotorIsOpen
                     rotor_data_vec = [rotor_data_vec; rotor_distribution_data];
                     rotor_data_time = [rotor_data_time TIME.clock];

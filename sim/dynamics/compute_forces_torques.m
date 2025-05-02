@@ -32,17 +32,20 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [F_total, F_rotor, F_gravity, F_drag_cilinder, ...
+function [F_total, F_rotor, F_gravity, F_drag, ...
           T_total, T_rotor, rotor_distribution_data] = ...
           compute_forces_torques(SIM, VEHICLE, ROTOR, BLADE, ATMOSPHERE, EARTH)
 
 % Default initialization
 F_rotor = [0; 0; 0];
 T_rotor = [0; 0; 0];
-F_drag_cilinder = [0; 0; 0];
+F_drag = [0; 0; 0];
 
 % Compute gravitational force
 F_gravity = gravitic_force(VEHICLE, EARTH);
+
+% Compute drag force
+F_drag = drag_force(VEHICLE, ATMOSPHERE);
 
 % Empty rotor distribution structure
 rotor_distribution_data = RotorAzimutalDistribution([], []);
@@ -54,7 +57,7 @@ if ROTOR.rotorIsOpen
 end
 
 % Total force includes gravity, rotor (if active), and aerodynamic drag
-F_total = F_gravity + F_drag_cilinder + F_rotor;
+F_total = F_gravity + F_drag + F_rotor;
 
 % Total torque includes only rotor torque (x and y components kept, z zeroed)
 T_total = T_rotor;
