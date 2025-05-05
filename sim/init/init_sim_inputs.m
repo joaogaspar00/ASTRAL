@@ -4,7 +4,7 @@ function  [SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH] = init_sim_inputs(inData)
 
 VEHICLE.mass_payload = inData.sim_payload_mass;
 
-%VEHICLE.dragMode = app.vehicleDrag;
+VEHICLE.dragMode = inData.vehicle_drag_mode;
 
 VEHICLE.InitPosition = [0; 0; inData.sim_init_height];
 
@@ -70,7 +70,7 @@ BLADE.dA = BLADE.dy .* BLADE.chord;
 BLADE.mass =  0.4 * (BLADE.Span^(2.6));
 
 
-ROTOR.mass = BLADE.mass * ROTOR.Nb;
+ROTOR.mass = BLADE.mass * ROTOR.Nb + 2.75*(BLADE.Span^(1.8));
 ROTOR.azimutal_points = inData.rotor_azimutal_points;
 
 

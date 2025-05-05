@@ -29,25 +29,33 @@ ROTOR.induced_velocity = induced_velocity;
 BLADE.Span = Span;
 BLADE.RootBladeDistance = RootBladeDistance;
 BLADE.No_elements = No_elements;
-BLADE.theta = theta;
+BLADE.root_theta = root_theta;
 BLADE.twist_rate = twist_rate;
-BLADE.chord = chord;
+BLADE.root_chord = root_chord;
+BLADE.lambda_chord = lambda_chord;
 
 BLADE.prandtlTipLosses = true;
 BLADE.airfoil_name = airfoil.name;
 BLADE.airfoil_data = airfoil.data;
 BLADE.tc = 0.12;
-BLADE.AR = BLADE.Span / BLADE.chord;
-BLADE.fixed_positions = get_blades_position(ROTOR.Nb);
-BLADE.thickness =  BLADE.tc * BLADE.chord;
+
 BLADE.dy = BLADE.Span / BLADE.No_elements;
-BLADE.dA = BLADE.dy * BLADE.chord;
+
+
 
 BLADE.pos_sec = (0:BLADE.No_elements) * BLADE.dy + BLADE.RootBladeDistance;
 BLADE.pos_sec = [zeros(1, length(BLADE.pos_sec)); BLADE.pos_sec; zeros(1, length(BLADE.pos_sec))];
-BLADE.mass =  0.4 * (BLADE.Span^(2.6));
 
-BLADE.theta = twist_distribution(BLADE);
+BLADE = planform_distribution(BLADE);
+
+BLADE.AR = BLADE.Span / BLADE.root_chord;
+BLADE.fixed_positions = get_blades_position(ROTOR.Nb);
+BLADE.thickness =  BLADE.tc * BLADE.chord;
+
+BLADE.dA = BLADE.dy * BLADE.chord;
+
+
+BLADE.mass =  0.4 * (BLADE.Span^(2.6));
 
 ROTOR.mass = BLADE.mass * ROTOR.Nb;
 
@@ -65,9 +73,6 @@ for k = 1:ROTOR.azimutal_points
         BLADE.pos_sec_r(:, i, k) = ROTOR.R_b_r(:, :, k) * BLADE.pos_sec(:, i);
     end
 end
-
-ROTOR.II = inertia_tensor(ROTOR, BLADE);
-ROTOR.II_inv = inv(ROTOR.II);
 
 
 VEHICLE.mass = ROTOR.mass + VEHICLE.mass_payload;

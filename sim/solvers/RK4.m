@@ -177,6 +177,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
 
                 AUX_OUTPUT = saveAsOUTPUT(OUTPUT, TIME, VEHICLE, ROTOR, ATMOSPHERE, ...
                     F_total, F_rotor, F_gravity, F_drag, T_total, T_rotor);
+                
                 if ROTOR.rotorIsOpen
                     rotor_data_vec = [rotor_data_vec; rotor_distribution_data];
                     rotor_data_time = [rotor_data_time TIME.clock];

@@ -82,6 +82,8 @@ for i = 1:length(BLADE.pos_sec)
     U_T(i) = V_e(1);
     U_R(i) = V_e(2);
     U_P(i) = V_e(3);
+
+    % fprintf("\t Ut = %.2f |  Ur = %.2f |  Up = %.2f\n", U_T(i), U_R(i),U_P(i))
     
     % Determine flow direction (0 = forward, 1 = reversed)
     flow_mode(i) = U_T(i) < 0;

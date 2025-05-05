@@ -29,6 +29,8 @@ function [alpha, phi, element_state] = getFlowAngles(U_T, U_P, theta)
 
 % Initialize velocity vector in the effective flow direction (U_T in x, U_P in z)
 U_e = [U_T; 0; U_P];
+% 
+% fprintf(">> U_T = %.2f | theta = %.2f \n", U_T, theta)
 
 % Check if the velocity vector is zero (no relative motion)
 if norm(U_e) == 0
@@ -48,9 +50,8 @@ else
         end
     end
 
-    alpha = theta - phi;
-    element_state = 1;
-
+    alpha = theta-phi;
+    element_state = -1;
     % %# CASE 1
     % if theta >= 0 && phi < 0 && phi > -90
     %     element_state = 1;
@@ -73,11 +74,15 @@ else
     % 
     % %# CASE 5
     % elseif theta < 0 && phi < -90
-    %     element_state = 4;
+    %     element_state = 5;
     %     alpha = theta - phi;  
     % 
+    % else
+    %     error("ERROR : phi = %.2f | theta = %.2f\n", phi, theta)
     % end
 
 end
+  
+
 
 end

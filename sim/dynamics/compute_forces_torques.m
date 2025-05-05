@@ -45,7 +45,9 @@ F_drag = [0; 0; 0];
 F_gravity = gravitic_force(VEHICLE, EARTH);
 
 % Compute drag force
-F_drag = drag_force(VEHICLE, ATMOSPHERE);
+if VEHICLE.dragMode
+    F_drag = drag_force(VEHICLE, ATMOSPHERE);
+end
 
 % Empty rotor distribution structure
 rotor_distribution_data = RotorAzimutalDistribution([], []);
