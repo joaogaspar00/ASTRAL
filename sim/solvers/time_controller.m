@@ -12,7 +12,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function TIME = time_controller (TIME)
+function TIME = time_controller (TIME, VEHICLE)
 
 
 
@@ -20,10 +20,10 @@ if TIME.clock > TIME.time_limit_sim
     TIME.stop_flag = true;
 end
 
-if TIME.convergency_flag
-    TIME.dt = 1.1 * TIME.dt;
-    TIME.convergency_flag = false;
-end
+% if VEHICLE.position(3) < 74500
+%     TIME.dt = 0.1;
+%     disp("AQUIIII DENTRO")
+% end
 
 TIME.clock = TIME.clock + TIME.dt;
 

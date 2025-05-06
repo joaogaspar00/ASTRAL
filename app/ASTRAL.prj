@@ -1,0 +1,178 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration file="C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.prj" location="C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app" name="ASTRAL" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>ASTRAL</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark>João Gaspar</param.authnamewatermark>
+    <param.email>joao.p.gaspar@tecnico.ulisboa.pt</param.email>
+    <param.company>IST-ULisboa</param.company>
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\IST-ULisboa\ASTRAL\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\ASTRAL\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\ASTRAL\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\ASTRAL\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\ASTRAL</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>false</param.web.mcr>
+    <param.package.mcr>true</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments</param.help.text>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\ASTRAL.mlapp</file>
+    </fileset.main>
+    <fileset.resources />
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\analysis2D.mlapp</file>
+      <file>${PROJECT_ROOT}\plot_functions\plot_blade_3D.m</file>
+      <file>${PROJECT_ROOT}\plot_functions\polarPlot.m</file>
+      <file>${PROJECT_ROOT}\update_progressBar.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_AR_correction.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_model_coefficients.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_poststallRegime_CD.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_poststallRegime_CL.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_prestallRegime_CD.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AERODAS\AERODAS_prestallRegime_CL.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\AerodynamicModel.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\generate_data_aeromodel.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\getAlphaZeroCL.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\getLinearConstant.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\aerodynamic_model\NeuralFoil\NeuralFoil.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\atmosphereModel_selector.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\EAM_atmospheric_model.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\ISA_atmospheric_model.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\CCOR.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\CCOR2.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\DENSM.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\DENSU.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\DNET.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GHP7.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GLATF.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GLOB7S.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GLOBE7.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GTD7.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GTD7D.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\GTS7.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\nrlmsise00.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\SCALH.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\SPLINE.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\SPLINI.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\SPLINT.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00\@nrlmsise00\TSELEC.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\atmospheric_model\NRLMSISE00_atmos_model.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\azimutalDescretization.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\compute_blade_force.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\compute_rotor_force.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\compute_rotor_induced_velocity.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\force_torque_integration.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\getFlowAngles.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\MachNumber.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\planform_distribution.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\prandtl_function.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\bet\ReynoldsNumber_func.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\class\BladeDistribution.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\class\RotorAzimutalDistribution.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\dynamics\compute_forces_torques.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\dynamics\drag_force.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\dynamics\gravitic_force.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\dynamics\inertia_tensor.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\init\init_sim_inputs.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\init\init_sim_outputs.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\math\boole_integration.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\math\rectangle_integration.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\math\rotationMatrix_generator.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\math\simpson_integration.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\math\trapezoidal_integration.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\out\pos_sim_processing.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\out\saveAsOUTPUT.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\run_simulation.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\check_induced_velocity_convergency.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\RK4.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\RK4_solver_convergency.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\time_controller.m</file>
+      <file>C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\vi_convergency_helper.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\ASTRAL\for_testing" name="readme.txt" optional="true">C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\ASTRAL\for_testing" name="splash.png" optional="false">C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL\for_testing\splash.png</file>
+      <file location="${PROJECT_ROOT}\ASTRAL\for_testing" name="ASTRAL.exe" optional="false">C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL\for_testing\ASTRAL.exe</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2024b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

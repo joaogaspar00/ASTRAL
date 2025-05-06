@@ -25,7 +25,7 @@ else
     % fprintf("\t [%d] Error: %.10e \n", ROTOR.vi_iter_counter, ROTOR.vi_error)
 
     % Limit vi convergency loop no. of iterations
-    if ROTOR.vi_iter_counter == 10
+    if ROTOR.vi_iter_counter == 1
          ROTOR.vi_convergency = true;
     end
     

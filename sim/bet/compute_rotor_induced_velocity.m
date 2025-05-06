@@ -5,7 +5,7 @@ V_r = R_i_r * VEHICLE.velocity;
 
 if ROTOR.velocity == 0
     ROTOR.induced_velocity = 0;
-    ROTOR.operation_mode = "Rotor Off";
+    ROTOR.operation_mode = "Off";
     return;
 end
 
@@ -28,7 +28,7 @@ else
     k3 = -1.718;
     k4 = -0.655;
 
-    vr_Vc = -Vc/vh;
+    vr_Vc = Vc/vh;
 
     vr_vi = 1 + k1 * vr_Vc + k2 * vr_Vc^2 + k3 * vr_Vc^3 + k4 * vr_Vc^4;
 

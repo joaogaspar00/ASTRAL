@@ -138,8 +138,9 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
             % fprintf("\t{Outputs} F [%.2f %.2f %.2f] | T [%.2f %.2f %.2f] | Fr [%.2f %.2f %.2f] | Tr %.2f \n", F_total, T_total, F_rotor, T_rotor)
 
             % Rotation matrix for Euler angle derivatives
-            phi = VEHICLE.orientation(1);
-            theta = VEHICLE.orientation(2);            
+            phi = PREVIOUS_STATE.vehicle_orientation(1);
+            theta = PREVIOUS_STATE.vehicle_orientation(2);  
+            
             RR = [1   tand(theta)*sind(phi)   tand(theta)*cosd(phi);
                   0   cosd(phi)               -sind(phi);
                   0   sind(phi)/cosd(theta)   cosd(phi)/cosd(theta)];
@@ -236,7 +237,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
     [TIME, ROTOR] = RK4_solver_convergency (TIME, ROTOR);
 
     % Advance simulation time
-    TIME = time_controller(TIME);
+    TIME = time_controller(TIME, VEHICLE);
     
     % Update visual progress bar
     update_progressBar(VEHICLE, ROTOR);

@@ -49,9 +49,12 @@ else
             phi = -90 - atand(U_P / U_T);
         end
     end
+    % alpha = phi-theta;
+    % element_state = -1;
 
     alpha = theta-phi;
     element_state = -1;
+     
     % %# CASE 1
     % if theta >= 0 && phi < 0 && phi > -90
     %     element_state = 1;

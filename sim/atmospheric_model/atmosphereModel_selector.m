@@ -20,11 +20,11 @@ function [ATMOSPHERE] = atmosphereModel_selector(TIME, SIM, VEHICLE)
    
     ATMOSPHERE.wind_velocity = [0; 0; 0];
 
-    % if TIME.clock > 5 && TIME.clock < 7
-    %     ATMOSPHERE.wind_velocity = [0; 1; 0];
-    % else
-    %     ATMOSPHERE.wind_velocity = [0; 0; 0];
-    % end
+    if TIME.clock >= 12 && TIME.clock <= 13
+        ATMOSPHERE.wind_velocity = [0; 0.1; 0];
+    else
+        ATMOSPHERE.wind_velocity = [0; 0; 0];
+    end
     
     ATMOSPHERE.temperature = T;
     ATMOSPHERE.pressure = p;
