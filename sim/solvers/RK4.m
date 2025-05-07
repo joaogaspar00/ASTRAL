@@ -70,6 +70,8 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         s_operation_mode = "wbs";
     elseif ROTOR.operation_mode == 1
         s_operation_mode = "vrs";
+    elseif ROTOR.operation_mode == 2
+        s_operation_mode = "forw";
     end
 
     fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.3f RPM]\n", ...
@@ -140,7 +142,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
             % Rotation matrix for Euler angle derivatives
             phi = PREVIOUS_STATE.vehicle_orientation(1);
             theta = PREVIOUS_STATE.vehicle_orientation(2);  
-            
+
             RR = [1   tand(theta)*sind(phi)   tand(theta)*cosd(phi);
                   0   cosd(phi)               -sind(phi);
                   0   sind(phi)/cosd(theta)   cosd(phi)/cosd(theta)];
@@ -198,7 +200,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
             ROTOR.velocity = PREVIOUS_STATE.rotor_velocity + (1/6) * (p(1) + 2*p(2) + 2*p(3) + p(4));
 
             % Compute the rotor's induced velocity 
-            ROTOR = compute_rotor_induced_velocity(VEHICLE, ROTOR, ATMOSPHERE);
+            ROTOR = compute_rotor_induced_velocity(VEHICLE, ROTOR, BLADE, ATMOSPHERE, F_rotor);
 
             % Check for convergence of induced velocity
             ROTOR = check_induced_velocity_convergency(PREVIOUS_STATE, VEHICLE, ROTOR);     

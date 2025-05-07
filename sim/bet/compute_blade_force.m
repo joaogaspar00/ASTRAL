@@ -119,8 +119,8 @@ for i = 1:length(BLADE.pos_sec)
     dF_a(:, i) = [dD(i); 0; dL(i)];
 
     
-    % fprintf("\t\t\t [%d|%d] Vi = %.2f | U [%.2f %.2f %.2f] | |U| = %.2f | Theta = %.2f | Phi = %.2f | Alpha = %.2f |  Re = %.2f |  Ma = %.2f |  Cl = %.2f |  Cd = %.2f\n", ...
-        % i, flow_mode(i), ROTOR.induced_velocity, V_e, total_velocity(i), BLADE.theta(i), phi(i), alpha(i), Re(i), Ma(i), Cl(i), Cd(i))    
+    % fprintf("\t\t [%d|%d] Vi = %.2f | U [%.2f %.2f %.2f] | |U| = %.2f | Theta = %.2f | Phi = %.2f | Alpha = %.2f |  Re = %.2f |  Ma = %.2f |  Cl = %.2f |  Cd = %.2f\n", ...
+    %     i, flow_mode(i), ROTOR.induced_velocity, V_e, total_velocity(i), BLADE.theta(i), phi(i), alpha(i), Re(i), Ma(i), Cl(i), Cd(i))    
 end
 
 % Apply Prandtl tip loss correction if enabled

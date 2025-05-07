@@ -52,7 +52,7 @@ else
     % alpha = phi-theta;
     % element_state = -1;
 
-    alpha = theta-phi;
+    alpha = theta - phi;
     element_state = -1;
      
     % %# CASE 1
