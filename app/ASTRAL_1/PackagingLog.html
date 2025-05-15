@@ -1,0 +1,76 @@
+<html>  
+<head>
+    <style>     
+        html{     
+        background-color: white;     
+        padding: 5px;     
+        width: 95%;     
+        }     
+        pre {     
+        overflow-x: auto;     
+        white-space: pre-wrap;     
+        white-space: -moz-pre-wrap;     
+        white-space: -pre-wrap;     
+        white-space: -o-pre-wrap;     
+        word-wrap: break-word;     
+        }     
+    </style>     
+    
+    <script type="text/javascript">     
+            
+            function setup(htmlComponent) {     
+            
+				htmlComponent.addEventListener("DataChanged", function(event) {     
+				scrollID =  htmlComponent.Data;     
+					if (scrollID != ''){
+						if(scrollID==="bottom"){         
+							scrollToBottom();     
+						} else if(scrollID==="DOWNLOAD_MCRINSTALLER" || scrollID==="BUILD_MISSING" || scrollID==="SAMPLE_GEN" || scrollID==="USER_REQUESTED_PACKAGE"){     
+							document.getElementById(scrollID).scrollIntoView(true);     
+						} else {     
+							//document.body.innerHTML = document.body.innerHTML + scrollID;     
+							document.body.appendChild(scrollID);                 
+							scrollToBottom();     
+						}    
+						htmlComponent.Data = '';
+					}		
+				});          
+            }     
+            function scrollToBottom(){     
+            var scrollingElement = (document.scrollingElement || document.body);     
+            scrollingElement.scrollTop = scrollingElement.scrollHeight;     
+            }     
+            
+    </script> 
+</head>
+ <body><meta charset="UTF-8">        
+ <pre><font color=blue>mcc -W 'webapp:ASTRAL_1,CONFIG:C:\Users\Utilizador\AppData\Local\Temp\tp8089ea19_6518_4a85_986b_e2ec3056ad4b.xml' -d 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL_1' -v -Z autodetect -C 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.mlapp'</font>
+Compiler version: 24.2 (R2024b)
+Analyzing file dependencies. 
+<font color='orange'>Warning: Web apps that generate additional windows or apps are currently not supported. Check the following .mlapp files for window and app
+dependencies:
+C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.mlapp
+C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\analysis2D.mlapp</font> 
+<font color='orange'>Warning: Your deployed application may fail because file or folder paths
+not present in the deployed environment may be included in your MATLAB startup
+file. Use the MATLAB function "isdeployed" in your MATLAB startup file to
+determine the appropriate execution environment when including file and folder
+paths, and recompile your application.
+</font> 
+<font color='orange'>> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compiler.internal.build.builder/Generic/build', 'C:\Program Files\MATLAB\R2024b\toolbox\compiler\cli\build\+compiler\+internal\+build\+builder\Generic.m', 83)" style="font-weight:bold">compiler.internal.build.builder/Generic/build</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\compiler\cli\build\+compiler\+internal\+build\+builder\Generic.m',83,0)">line 83</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compiler.build.webAppArchive', 'C:\Program Files\MATLAB\R2024b\toolbox\compiler\cli\build\+compiler\+build\webAppArchive.m', 103)" style="font-weight:bold">compiler.build.webAppArchive</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\compiler\cli\build\+compiler\+build\webAppArchive.m',103,0)">line 103</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('matlab.internal.compiler.ui.deployProject', 'C:\Program Files\MATLAB\R2024b\toolbox\compiler\ui\package_dialog\+matlab\+internal\+compiler\+ui\deployProject.m', 111)" style="font-weight:bold">matlab.internal.compiler.ui.deployProject</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\compiler\ui\package_dialog\+matlab\+internal\+compiler\+ui\deployProject.m',111,0)">line 111</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compiler.internal/WebAppSharingStrategy/showProject', 'C:\Program Files\MATLAB\R2024b\toolbox\compiler\+compiler\+internal\WebAppSharingStrategy.m', 45)" style="font-weight:bold">compiler.internal/WebAppSharingStrategy/showProject</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\compiler\+compiler\+internal\WebAppSharingStrategy.m',45,0)">line 45</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('matlab.internal.deployment/AppSharingStrategy/share', 'C:\Program Files\MATLAB\R2024b\toolbox\matlab\apps\+matlab\+internal\+deployment\AppSharingStrategy.m', 59)" style="font-weight:bold">matlab.internal.deployment/AppSharingStrategy/share</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\matlab\apps\+matlab\+internal\+deployment\AppSharingStrategy.m',59,0)">line 59</a>)
+In connector.internal.fevalMatlab
+In connector.internal.fevalJSON
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('waitbar', 'C:\Program Files\MATLAB\R2024b\toolbox\matlab\uitools\uitools\waitbar.m', 130)" style="font-weight:bold">waitbar</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\matlab\uitools\uitools\waitbar.m',130,0)">line 130</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('update_progressBar', 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\update_progressBar.m', 15)" style="font-weight:bold">update_progressBar</a> (<a href="matlab: opentoline('C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\update_progressBar.m',15,0)">line 15</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('RK4', 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\RK4.m', 245)" style="font-weight:bold">RK4</a> (<a href="matlab: opentoline('C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\solvers\RK4.m',245,0)">line 245</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_simulation', 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\run_simulation.m', 44)" style="font-weight:bold">run_simulation</a> (<a href="matlab: opentoline('C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\sim\run_simulation.m',44,0)">line 44</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('ASTRAL/RUNButtonPushed', 'C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.mlapp', 480)" style="font-weight:bold">ASTRAL/RUNButtonPushed</a> (<a href="matlab: opentoline('C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.mlapp',480,0)">line 480</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('matlab.apps.AppBase>@(source,event)executeCallback(ams,app,callback,requiresEventData,event)', 'C:\Program Files\MATLAB\R2024b\toolbox\matlab\appdesigner\appdesigner\runtime\+matlab\+apps\AppBase.m', 60)" style="font-weight:bold">matlab.apps.AppBase>@(source,event)executeCallback(ams,app,callback,requiresEventData,event)</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\matlab\appdesigner\appdesigner\runtime\+matlab\+apps\AppBase.m',60,0)">line 60</a>)</font> 
+Parsing file "C:\Users\Utilizador\OneDrive\Ambiente de Trabalho\LIFE PROJECT\ASTRAL\app\ASTRAL.mlapp"
+	(referenced from command line).
+
+</pre></body></html>

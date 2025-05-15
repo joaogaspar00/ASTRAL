@@ -32,10 +32,10 @@ tic
 % Progress bar, global variable initialization
 global progress_bar
 
-fprintf('==================================================\n');
-fprintf('                    SIMULATION START              \n');
-fprintf('==================================================\n\n');
-fprintf('Running Simulation...\n\n');
+% fprintf('==================================================\n');
+% fprintf('                    SIMULATION START              \n');
+% fprintf('==================================================\n\n');
+% fprintf('Running Simulation...\n\n');
 
 % Progress bar pop-up
 progress_bar = waitbar(0, sprintf('Height: %.2f m | 0 RPM', VEHICLE.InitPosition(3)));
@@ -47,26 +47,26 @@ progress_bar = waitbar(0, sprintf('Height: %.2f m | 0 RPM', VEHICLE.InitPosition
 close(progress_bar);
 
 fprintf('Job done successfully\n\n');
-
-fprintf('==================================================\n');
-fprintf('              SIMULATION POST-PROCESSING              \n');
-fprintf('==================================================\n\n');
+ 
+% fprintf('==================================================\n');
+% fprintf('              SIMULATION POST-PROCESSING              \n');
+% fprintf('==================================================\n\n');
 
 % Post-processing
 
 % Output variable creation
 OUTPUT = pos_sim_processing(OUTPUT, rotor_data);
 
-fprintf('==================================================\n');
-fprintf('              SIMULATION OUTPUT DATA              \n');
-fprintf('==================================================\n\n');
-   
-disp(OUTPUT)
-disp(OUTPUT.rotor_data)
-
-fprintf('==================================================\n');
-fprintf('          EXIT SIMULATION WITH NO ERRORS           \n');
-fprintf('==================================================\n\n');
+% fprintf('==================================================\n');
+% fprintf('              SIMULATION OUTPUT DATA              \n');
+% fprintf('==================================================\n\n');
+% 
+% disp(OUTPUT)
+% disp(OUTPUT.rotor_data)
+% 
+% fprintf('==================================================\n');
+% fprintf('          EXIT SIMULATION WITH NO ERRORS           \n');
+% fprintf('==================================================\n\n');
 
 
 end

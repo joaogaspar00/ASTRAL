@@ -74,8 +74,8 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         s_operation_mode = "forw";
     end
 
-    fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.3f RPM]\n", ...
-        TIME.clock, VEHICLE.position(3), s_operation_mode, VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
+    % fprintf(">> [%.2f] Altitude: %.4f [%s | %.2f | %.3f RPM]\n", ...
+    %     TIME.clock, VEHICLE.position(3), s_operation_mode, VEHICLE.velocity(3), ROTOR.velocity * 60/(2*pi));
 
     % Save current state
     PREVIOUS_STATE = struct( ...
@@ -117,7 +117,6 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
         p = zeros(1, 4); % rotor acceleration
         
         for i = 1:4
-
             
             if i == 1
                 VEHICLE.velocity = VEHICLE.velocity;                

@@ -20,10 +20,12 @@ if TIME.clock > TIME.time_limit_sim
     TIME.stop_flag = true;
 end
 
-% if VEHICLE.position(3) < 74500
-%     TIME.dt = 0.1;
-%     disp("AQUIIII DENTRO")
-% end
+if VEHICLE.position(3) < 300
+    TIME.stop_flag = true;
+end
+
+
+
 
 TIME.clock = TIME.clock + TIME.dt;
 

@@ -56,7 +56,6 @@ end
 
 %% Gráficos para todas as variáveis com Altitude no eixo Y
 
-
 % Temperature Plot
 figure()
 plot(T_eam(1:limit_eam_i), H(1:limit_eam_i), 'r', 'LineWidth', 1.5)
@@ -112,7 +111,6 @@ xlabel('Pressure (Pa)', 'FontSize', 10)
 title('Pressure', 'FontSize', 10)
 legend({'EAM - NASA', 'ISA', 'NRLMSISE-00'}, 'Location', 'best', 'FontSize', 10)
 saveas(gcf, './studies/atmos_model_comp/img/pressure_plot.png')
-
 
 % Kinematic Viscosity Plot
 figure()

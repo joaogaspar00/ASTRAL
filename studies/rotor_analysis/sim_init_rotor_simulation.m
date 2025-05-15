@@ -1,5 +1,5 @@
 % init manual simulation
-airfoil_name_toLoad = 'naca0010';
+airfoil_name_toLoad = 'n0012';
 airfoil_data_file = "./airfoils/data/" + airfoil_name_toLoad + ".mat";
 airfoil = load(airfoil_data_file).airfoil;
 
@@ -34,7 +34,7 @@ BLADE.twist_rate = twist_rate;
 BLADE.root_chord = root_chord;
 BLADE.lambda_chord = lambda_chord;
 
-BLADE.prandtlTipLosses = true;
+BLADE.prandtlTipLosses = false;
 BLADE.airfoil_name = airfoil.name;
 BLADE.airfoil_data = airfoil.data;
 BLADE.tc = 0.12;

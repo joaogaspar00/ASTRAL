@@ -41,8 +41,8 @@ title(stitle);
 set(gca, 'XTick', [], 'YTick', [], 'XColor', 'none', 'YColor', 'none');
 
 % Salvar a imagem, se necessário
-% if ~isempty(img_name)
-%     saveas(gcf, img_name, 'epsc'); % Salva como .eps em cores
-% end
+if ~isempty(img_name)
+    saveas(gcf, img_name, 'epsc'); % Salva como .eps em cores
+end
 
 end
