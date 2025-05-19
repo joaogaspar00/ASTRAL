@@ -10,6 +10,8 @@ if ROTOR.velocity == 0
 end
 
 
+disp(VEHICLE.velocity)
+
 if abs(VEHICLE.velocity(1)) > 0.01 || abs(VEHICLE.velocity(2)) > 0.01
 
     ROTOR.operation_mode = 2;

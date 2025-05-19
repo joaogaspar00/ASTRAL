@@ -4,14 +4,11 @@ close all
 
 tic
 
-airfoils_vec = {"naca0010", "naca2412", "naca4412"};
-twist_vec = [0 5 10 15];
+airfoils_vec = {"naca0010", "n0012", "naca2412", "naca4412"};
 
 sim_counter = 0;
 
 for ii = 1:length(airfoils_vec)
-for jj = 1:length(twist_vec)
-    % Constantes da simulação
     Nb = 4;
     Span = 1;
     root_theta = -10;
@@ -19,6 +16,7 @@ for jj = 1:length(twist_vec)
 
     init_height = 500;
     init_vel = 0;
+
     dt = 0.025;
     t_deploy_rotor = 3;
     mass_payload = 20;
@@ -26,25 +24,23 @@ for jj = 1:length(twist_vec)
     time_limit_sim = inf;
 
     % Parâmetros variáveis
-    airfoil_name = airfoils_vec{ii};  % corrigido: acesso ao conteúdo da célula
+    airfoil_name = airfoils_vec{ii};  
     RootBladeDistance = 0;
-    blade_twist_rate = twist_vec(jj);
+    blade_twist_rate = 0;
     lambda_chord = 1;
 
     sim_counter = sim_counter + 1;
 
-    sim_file = airfoil_name + "_twist_" + num2str(blade_twist_rate) + ".mat";
+    sim_file = "sim_" + airfoil_name + ".mat";
     disp(sim_file)
-    fprintf("Running simulation no.  %d - %s | e = %.3f | twist = %.3f | lambda = %.3f\n", ...
-        sim_counter, airfoil_name, RootBladeDistance, blade_twist_rate, lambda_chord)
+    fprintf("Running simulation no.  %d - %s \n", ...
+        sim_counter, airfoil_name)
 
     multiple_sims_init_inputs
     out = run_simulation(SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH);
 
     save(sim_file, "out")
 
-
-end
 end
 
 elapsed_time = toc;

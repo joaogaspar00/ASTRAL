@@ -90,6 +90,9 @@ end
 
 [ROTOR.II, ROTOR.II_inv] = inertia_tensor(ROTOR, BLADE);
 
+disp(ROTOR.II)
+
+
 
 ROTOR.disk_area = pi * (BLADE.Span^2 + 2*BLADE.Span*BLADE.RootBladeDistance);
 

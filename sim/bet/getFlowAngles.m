@@ -29,7 +29,7 @@ function [alpha, phi, element_state] = getFlowAngles(U_T, U_P, theta)
 
 % Initialize velocity vector in the effective flow direction (U_T in x, U_P in z)
 U_e = [U_T; 0; U_P];
-% 
+ 
 % fprintf(">> U_T = %.2f | theta = %.2f \n", U_T, theta)
 
 % Check if the velocity vector is zero (no relative motion)
@@ -49,6 +49,7 @@ else
             phi = -90 - atand(U_P / U_T);
         end
     end
+
     % alpha = phi-theta;
     % element_state = -1;
 
@@ -86,6 +87,4 @@ else
 
 end
   
-
-
 end
