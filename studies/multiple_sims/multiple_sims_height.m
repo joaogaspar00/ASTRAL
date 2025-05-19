@@ -4,7 +4,10 @@ close all
 
 tic
 
-init_height_vec = [10000 20000 50000 60000 75000];
+airfoil_vec = {"mh78", "n0012", "naca2412"};
+init_height_vec = [10000 17500 25000 50000 60000 70000 80000];
+
+time_limit_vec = 50; %[50 100 100 150 200 200 250 250];
 
 sim_counter = 0;
 
@@ -14,6 +17,7 @@ rpm = zeros(length(init_height_vec));
 f_max = zeros(length(init_height_vec));
 t_max = zeros(length(init_height_vec));
 
+for ii = 1:length(airfoil_vec)
 for jj = 1:length(init_height_vec)
     
     % Constantes da simulação   
@@ -24,25 +28,25 @@ for jj = 1:length(init_height_vec)
     root_chord = 0.17;
 
     init_height = init_height_vec(jj);
-    init_vel = -50;
-    dt = 0.05;
-    time_limit_sim = Inf;
+    init_vel = 0;
+    dt = 0.025;
+    time_limit_sim = time_limit_vec(jj);
 
-    t_deploy_rotor = 1;
+    t_deploy_rotor = 10;
 
     mass_payload = 20;
                     
 
     % Parâmetros variáveis
-    airfoil_name = "n0012";
+    airfoil_name = airfoil_vec{ii};
     RootBladeDistance = 0;
     blade_twist_rate = 0;
     lambda_chord = 1;
 
     sim_counter = sim_counter + 1;
 
-    fprintf("Running simulation no. %d - %s | h = %.2f\n", ...
-        sim_counter, airfoil_name, init_height)
+    fprintf("Running simulation no. %d - %s | h = %.2f | time_limit =  %.2f\n", ...
+        sim_counter, airfoil_name, init_height, time_limit_sim)
 
     multiple_sims_init_inputs
     out = run_simulation(SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH);
@@ -57,12 +61,13 @@ for jj = 1:length(init_height_vec)
 
     % Geração do nome do ficheiro com substituição de '.' por '_'
     filename_raw = sprintf("sim_%s_h_%.0f", airfoil_name, init_height);
-    filename = strrep(filename_raw, '.', '_') + ".mat"
+    filename = strrep(filename_raw, '.', '_') + ".mat";
 
     fprintf("\t >> saving to %s\n", filename)
 
-    % save(filename, "out");  % descomenta quando tiveres o 'out'
+    save(filename, "out");  % descomenta quando tiveres o 'out'
 
+end
 end
 
 save("multiple_sims_results_height.mat", "t", "v", "rpm", "f_max", "t_max")

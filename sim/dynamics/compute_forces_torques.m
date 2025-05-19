@@ -63,7 +63,6 @@ F_total = F_gravity + F_drag + F_rotor;
 
 % Total torque includes only rotor torque (x and y components kept, z zeroed)
 % T_total = T_rotor;
-
 % T_total(2) = 0;
 % T_total(3) = 0;
 

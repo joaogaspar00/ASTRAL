@@ -20,12 +20,6 @@ if TIME.clock > TIME.time_limit_sim
     TIME.stop_flag = true;
 end
 
-if VEHICLE.position(3) < 300
-    TIME.stop_flag = true;
-end
-
-
-
 
 TIME.clock = TIME.clock + TIME.dt;
 
