@@ -18,8 +18,8 @@ function [ATMOSPHERE] = atmosphereModel_selector(TIME, SIM, VEHICLE)
         error("Simulation Error: Selected atmosphere model is not valid");
     end
    
-    if TIME.clock >= 15 %&& TIME.clock <= 17
-        ATMOSPHERE.wind_velocity = [0; 0; 0];
+    if TIME.clock >= 15 && TIME.clock <= 20
+        ATMOSPHERE.wind_velocity = [10; 0; 0];
     else
         ATMOSPHERE.wind_velocity = [0; 0; 0];
     end

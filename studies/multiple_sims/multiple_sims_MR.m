@@ -4,20 +4,16 @@ close all
 
 tic
 
-airfoils_vec = {"n0012", "naca2412", "mh78"};
-root_vec = [0];
-twist_vec = [0];
-lambda_vec = [1];
-
-MR = [10 20 50 75 100 150 200 250];
+airfoils_vec = {"naca2412", "mh78"};
+MR = [150 250];
 
 sim_counter = 0;
 
-t = zeros(length(airfoils_vec), length(root_vec), length(twist_vec), length(lambda_vec));
-v = zeros(length(airfoils_vec), length(root_vec), length(twist_vec), length(lambda_vec));
-rpm = zeros(length(airfoils_vec), length(root_vec), length(twist_vec), length(lambda_vec));
-f_max = zeros(length(airfoils_vec), length(root_vec), length(twist_vec), length(lambda_vec));
-t_max = zeros(length(airfoils_vec), length(root_vec), length(twist_vec), length(lambda_vec));
+t = zeros(length(airfoils_vec), length(MR));
+v = zeros(length(airfoils_vec), length(MR));
+rpm = zeros(length(airfoils_vec), length(MR));
+f_max = zeros(length(airfoils_vec), length(MR));
+t_max = zeros(length(airfoils_vec), length(MR));
 
 for jj = 1:length(airfoils_vec)
     for kk = 1:length(MR)
@@ -38,11 +34,13 @@ for jj = 1:length(airfoils_vec)
         mass_payload = MR(kk) * Span;
                         
     
-        % Parâmetros variáveis
+        init_height = 500;
+        init_vel = 0;
+        
         airfoil_name = airfoils_vec{jj};
-        RootBladeDistance = root_vec(1);
-        blade_twist_rate = twist_vec(1);
-        lambda_chord = lambda_vec(1);
+        RootBladeDistance = 0;
+        blade_twist_rate = 0;
+        lambda_chord = 1;
     
         sim_counter = sim_counter + 1;
     
@@ -51,14 +49,14 @@ for jj = 1:length(airfoils_vec)
     
         multiple_sims_init_inputs
         out = run_simulation(SIM, TIME, VEHICLE, ROTOR, BLADE, EARTH);
-    
-        t(jj, kk, ll, mm) = out.main_clock(end);
 
-        v(jj, kk, ll, mm) = out.vehicle_velocity(end, 3);
-        rpm(jj, kk, ll, mm) = out.rotor_velocity(end);
+        t(jj, kk) = out.main_clock(end);
 
-        f_max(jj, kk, ll, mm) = out.F_rotor(end, 3);
-        t_max(jj, kk, ll, mm) = out.T_rotor(end);
+        v(jj, kk) = out.vehicle_velocity(end, 3);
+        rpm(jj, kk) = out.rotor_velocity(end);
+
+        f_max(jj, kk) = max(out.F_rotor(:, 3));
+        t_max(jj, kk) = max(out.T_rotor(end));
     
         % Geração do nome do ficheiro com substituição de '.' por '_'
         filename_raw = sprintf("sim_%s_RM_%.2f", airfoil_name, MR(kk));
@@ -66,7 +64,7 @@ for jj = 1:length(airfoils_vec)
     
         fprintf("\t >> saving to %s\n", filename)
     
-        % save(filename, "out");  % descomenta quando tiveres o 'out'
+        save(filename, "out");  % descomenta quando tiveres o 'out'
     end
 end
 

@@ -5,17 +5,14 @@ close all
 tic
 
 
-rootcut_out = [0.25];
-blade_length = 1 - rootcut_out;
-
-
+rootcut_out = [0 0.02 0.05 0.1 0.15 0.2 0.25 0.3];
 
 sim_counter = 0;
 
 for ii = 1:length(rootcut_out)
     % Constantes da simulação
     Nb = 4;
-    Span = blade_length(ii);
+    Span = 1;
     root_theta = -10;
     root_chord = 0.17;
 
@@ -35,7 +32,7 @@ for ii = 1:length(rootcut_out)
 
     sim_counter = sim_counter + 1;
 
-    sim_file = airfoil_name + "_rootcutv2_" + num2str(rootcut_out(ii)) + ".mat";
+    sim_file = "rootcut_case1_" + num2str(rootcut_out(ii)) + ".mat";
     sim_file = strrep(sim_file, '.', '_') + ".mat";
 
     disp(sim_file)

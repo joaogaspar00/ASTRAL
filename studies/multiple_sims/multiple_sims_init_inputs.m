@@ -29,7 +29,7 @@ BLADE.RootBladeDistance = RootBladeDistance;
 
 BLADE.tc = 0.12;
 
-BLADE.No_elements = 50;
+BLADE.No_elements = 40;
 
 BLADE.root_theta = root_theta;
 

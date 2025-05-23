@@ -51,7 +51,7 @@ ROTOR.vi_array = [];
 
 % Variables for RK4 time controll
 
-ROTOR.last_velocity = 1e6;
+ROTOR.last_velocity = 0;
 ROTOR.solver_convergency_counter = 0;
 TIME.convergency_flag = false;
 
@@ -235,7 +235,7 @@ while VEHICLE.position(3) > 0 && ~TIME.stop_flag
     VEHICLE.ang_velocity = PREVIOUS_STATE.vehicle_ang_velocity + (1/6) * (m(:,1) + 2*m(:,2) + 2*m(:,3) + m(:,4));
     VEHICLE.orientation  = PREVIOUS_STATE.vehicle_orientation  + (1/6) * (n(:,1) + 2*n(:,2) + 2*n(:,3) + n(:,4));
       
-    [TIME, ROTOR] = RK4_solver_convergency (TIME, ROTOR);
+    % [TIME, ROTOR] = RK4_solver_convergency (TIME, ROTOR);
 
     % Advance simulation time
     TIME = time_controller(TIME, VEHICLE);

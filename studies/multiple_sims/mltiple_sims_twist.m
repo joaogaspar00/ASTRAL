@@ -4,17 +4,15 @@ close all
 
 tic
 
-airfoils_vec = {"naca0010", "naca2412", "naca4412"};
-twist_vec = [0 5 10 15];
+twist_vec = [0 12 15 10 10 22 25];
 
 sim_counter = 0;
 
-for ii = 1:length(airfoils_vec)
 for jj = 1:length(twist_vec)
-    % Constantes da simulação
+
     Nb = 4;
     Span = 1;
-    root_theta = -10;
+    root_theta = -20;
     root_chord = 0.17;
 
     init_height = 500;
@@ -25,16 +23,16 @@ for jj = 1:length(twist_vec)
 
     time_limit_sim = inf;
 
-    % Parâmetros variáveis
-    airfoil_name = airfoils_vec{ii};  % corrigido: acesso ao conteúdo da célula
+    airfoil_name = "n0012";
     RootBladeDistance = 0;
     blade_twist_rate = twist_vec(jj);
     lambda_chord = 1;
 
     sim_counter = sim_counter + 1;
 
-    sim_file = airfoil_name + "_twist_" + num2str(blade_twist_rate) + ".mat";
-    disp(sim_file)
+    sim_file = "twist_" + num2str(blade_twist_rate) + ".mat";
+    sim_file = strrep(sim_file, '.', '_') + ".mat";
+
     fprintf("Running simulation no.  %d - %s | e = %.3f | twist = %.3f | lambda = %.3f\n", ...
         sim_counter, airfoil_name, RootBladeDistance, blade_twist_rate, lambda_chord)
 
@@ -43,8 +41,6 @@ for jj = 1:length(twist_vec)
 
     save(sim_file, "out")
 
-
-end
 end
 
 elapsed_time = toc;
