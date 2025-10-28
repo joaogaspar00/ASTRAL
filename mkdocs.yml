@@ -1,6 +1,20 @@
-site_name: Astral
-nav:
-  - Home: index.md
-  - About: about.md
+site_name: My site
+site_url: https://docs.server/
+theme:
+  name: material
+  palette: 
+    # Dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: blue
+      accent: deep purple
 
-theme: readthedocs
+    # Light mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: blue
+      accent: deep orange
