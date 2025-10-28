@@ -1,1 +1,0 @@
-# isto e o about
