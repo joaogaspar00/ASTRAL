@@ -7,9 +7,9 @@
 %
 % Description:
 % This function runs the complete aerospace simulation. It starts a timer, 
-% opens a progress bar, calls the physics solver (based on 4th-order 
-% Runge-Kutta), and performs post-processing on the simulation data.
-% It prints updates to the console and closes the progress bar when finished.
+% opens a progress bar, calls the physics solver, and performs 
+% post-processing on the simulation data. It prints updates to the console 
+% and closes the progress bar when finished.
 %
 % Inputs:
 % - SIM: structure containing simulation parameters 
