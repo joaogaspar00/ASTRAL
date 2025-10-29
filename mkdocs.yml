@@ -9,6 +9,7 @@ copyright: Copyright &copy; 2025 João Gaspar
 plugins:
   - tags
   - search
+  - open-in-new-tab
 
 theme:
   language: en
