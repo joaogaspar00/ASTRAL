@@ -25,5 +25,5 @@ jobs:
           path: ~/.cache 
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-bibtex mkdocs-open-in-new-tab
+      - run: pip install mkdocs-material mkdocs-bibtex mkdocs-open-in-new-tab mkdocs-caption mkdocs-macros-plugin mkdocs-git-revision-date-localized-plugin
       - run: mkdocs gh-deploy --force

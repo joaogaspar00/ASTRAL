@@ -7,11 +7,14 @@ repo_name: joaogaspar00/ASTRAL
 copyright: Copyright &copy; 2025 João Gaspar 
 
 plugins:
-  - tags
   - search
+  - tags
   - open-in-new-tab
+  - caption
   - bibtex:
       bib_file: "./docs/refs.bib"
+  - git-revision-date-localized:
+      enable_creation_date: true
 
 theme:
   language: en
@@ -69,7 +72,8 @@ markdown_extensions:
   - abbr
   - footnotes
   - admonition
-  - attr_list
+  - attr_list  
+  - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -87,10 +91,11 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.superfences
+  - pymdownx.blocks.caption
 
 
 extra_javascript:
-  - js/mathjax.js
+  - assets/js/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 extra_css:
