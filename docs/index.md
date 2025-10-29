@@ -1,4 +1,4 @@
-# Welcome to ASTRAL Project Documentation :raised_hand:{ .wave }
+# Welcome to ASTRAL Documentation :raised_hand:{ .wave }
 
 Autorotation System for Targeted Recovery and Aircraft Landing (ASTRAL) is a research initiative focused on exploring rotor dynamics and aerodynamic performance under autorotation. This project was undertaken as part of the requirements for the Master’s degree in Aerospace Engineering at Instituto Superior Técnico, University of Lisbon.
 
