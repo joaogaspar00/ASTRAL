@@ -9,7 +9,7 @@ The primary objective of Astral was to develop a robust and reliable model for a
 The outcomes of the project, including the full thesis and an extended abstract, are available through the following links, providing detailed insights into the methodology, simulations, and results obtained.
 
 [Thesis](./files/thesis.pdf){ .md-button }
-[Extende Abstract](./files/extended_abstract.pdf){ .md-button }
+[Extended Abstract](./files/extended_abstract.pdf){ .md-button }
 
 
 ## Authors
