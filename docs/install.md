@@ -8,5 +8,3 @@
 4. Go to the project folder inside your local repository
 5. Run ```setup.m```
 6. Inside the Matlab App Designer press play on the top menu or ```F5``` to compile and run the app
-
-## From Executables

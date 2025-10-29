@@ -37,4 +37,15 @@ Side menu - active page hover bold only
   font-weight: bold;
 }
 
+/*===========================================
+~Highlight Link
+===========================================*/
 
+:target {
+  animation: highlightFade 2s ease-out;
+}
+
+@keyframes highlightFade {
+  0%   { background-color: #fff700; }
+  100% { background-color: transparent; }
+}
