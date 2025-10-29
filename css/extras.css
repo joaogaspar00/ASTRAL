@@ -1,0 +1,51 @@
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(20deg);
+  }
+  30% {
+    transform: rotate(-20deg);
+  }
+  45% {
+    transform: rotate(15deg);
+  }
+  60% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.wave {
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: wave 3s infinite;
+}
+
+/*===========================================
+Side menu - active page hover bold only
+===========================================*/
+
+/* Active page - hover bold only */
+.md-nav__link--active:hover {
+  font-weight: bold;
+}
+
+/*===========================================
+~Highlight Link
+===========================================*/
+
+:target {
+  animation: highlightFade 2s ease-out;
+}
+
+@keyframes highlightFade {
+  0%   { background-color: #fff700; }
+  100% { background-color: transparent; }
+}
