@@ -82,6 +82,7 @@ markdown_extensions:
       title: On this page
   - pymdownx.arithmatex:
       generic: true
+      preview: false
   - pymdownx.snippets:
       auto_append:
         - docs/includes/abbreviations_list.md
