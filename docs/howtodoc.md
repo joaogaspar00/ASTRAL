@@ -116,3 +116,43 @@ For example:
     The BET is widely used for preliminary rotor designs
 
 Consult for abbreviation table [here](theory/abbreviations.md).
+
+## Define units
+
+It is possible to define units in your text using a **custom JavaScript macro**. This macro should be configured inside the file `docs/js/mathjax-config.js`, which is loaded by Material for MkDocs to customize MathJax settings.
+
+The goal of this macro is to create a `\unit` command that formats units consistently in **roman (upright) font**, as is standard in scientific notation. This helps maintain clarity and consistency when writing physical quantities, such as Newtons (N), meters per second (m/s), or kilograms per cubic meter (kg/m³).
+
+!!! example "Using the `\unit` macro"
+    ```
+    $\unit{m/s}$
+    ```
+    
+    **Explanation:**
+    
+    - `\unit{m/s}`: This is a macro (if defined in MathJax) that outputs the unit **meters per second** in upright font.
+    - `$...$`: Dollar signs indicate an **inline math expression**, telling MathJax to render it correctly.
+    - The macro separates the **unit** from numbers or variables, maintaining clarity.
+    
+    **How to use with numbers:**
+    
+    ```
+    $10\ \unit{m/s}$
+    ```
+    
+    Renders as: \(10\ \mathrm{m/s}\)
+    
+    Here:
+    - `10` is the numerical value.
+    - `\ ` adds a small space between the number and the unit.
+    - `\unit{m/s}` displays the unit in upright font.
+    
+    **Example in a formula:**
+    
+    ```
+    $v = 20\ \unit{m/s}$
+    ```
+    
+    Renders as: \(v = 20\ \mathrm{m/s}\)
+    
+    This keeps the formatting consistent for all units in your documentation.
