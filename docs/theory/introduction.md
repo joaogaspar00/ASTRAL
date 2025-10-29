@@ -14,7 +14,7 @@ For the development of the mathematical model that follows and considering what 
 
 ![A model vehicle](../assets/img/reference_frames.png){#fig-reference_frames width="80%"}
 
-Also, there are three other important reference frames in order to apply BET in Fig.\ref{fig:reference_frames}: the blade reference frame (red axes in [Fig.&nbsp;2](#fig-reference_frames)), the element reference frame (green axis in [Fig.&nbsp;2](#fig-reference_frames)) and the 2D aerodynamic reference frame (purple axes in [Fig.&nbsp;2](#fig-reference_frames)). These axes are explained further in page [Blade Element Theory](bet.md) where BET is presented.
+Also, there are three other important reference frames in order to apply BET in [Fig.&nbsp;2](#fig-reference_frames): the blade reference frame (red axes in [Fig.&nbsp;2](#fig-reference_frames)), the element reference frame (green axis in [Fig.&nbsp;2](#fig-reference_frames)) and the 2D aerodynamic reference frame (purple axes in [Fig.&nbsp;2](#fig-reference_frames)). These axes are explained further in page [Blade Element Theory](bet.md) where BET is presented.
 
 !!! note
     From here on, when a variable or vector is written in any reference frame, it will be denoted by its correspondent superscript, e.g., if a variable or vector, [$x$](nomenclature.md#var_x), is written in the rotor frame, it will be denoted by [$x^r$](nomenclature.md#var_xr).
