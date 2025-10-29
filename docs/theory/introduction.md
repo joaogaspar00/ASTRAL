@@ -8,3 +8,5 @@ On the other hand, the rotor is defined by the blades, which are considered to b
 
 
 ![A model vehicle](../assets/img/model_vehicle.png){#fig-model1 width="300"}
+
+update
