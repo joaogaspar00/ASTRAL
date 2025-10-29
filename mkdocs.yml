@@ -1,20 +1,127 @@
 site_name: ASTRAL
 site_url: https://joaogaspar00.github.io/ASTRAL/
-theme:
-  name: material
-  palette: 
-    # Dark mode
-    - scheme: slate
-      toggle:
-        icon: material/weather-sunny
-        name: Dark mode
-      primary: blue
-      accent: deep purple
 
-    # Light mode
+repo_url: https://github.com/joaogaspar00/ASTRAL
+repo_name: joaogaspar00/ASTRAL
+
+copyright: Copyright &copy; 2025 João Gaspar 
+
+plugins:
+  - tags
+  - search
+
+theme:
+  language: en
+  name: material
+
+  font:
+    text: Ubuntu
+    code: Source Code Pro
+
+  icon:
+    repo: fontawesome/brands/github
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
+  
+  palette: 
+    # Palette toggle for light mode
     - scheme: default
+      primary: black
+      accent: black
       toggle:
-        icon: material/weather-night
-        name: Light mode
-      primary: blue
-      accent: deep orange
+        icon: material/lightbulb
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: black
+      accent: white
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+
+  features:
+    - navigation.footer
+    #- navigation.indexes
+    - navigation.sections
+    #- navigation.tabs
+    #- navigation.top
+    - navigation.tracking
+    - content.code.copy
+    - search.highlight
+ 
+
+markdown_extensions:
+  - abbr
+  - footnotes
+  - admonition
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.snippets:
+      auto_append:
+        - docs/includes/abbreviations_list.md
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+
+
+extra_javascript:
+  - js/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - css/extras.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/joaogaspar00/
+
+    - icon: fontawesome/brands/github
+      link: https://github.com/joaogaspar00
+    
+    - icon: fontawesome/solid/user
+      link: https://joaogaspar00.github.io/
+
+
+
+watch:
+  - docs/includes
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Theory:
+      - Introduction: theory/introduction.md
+      - Blade Element Theory: theory/bet.md
+      - Glossary: theory/abbreviations.md
+      - Nomenclature: theory/nomenclature.md
+  - App:
+    - Overview: app/overview.md
+  - How To:
+      - Install the Project: install.md
+      - Write Documentation: howtodoc.md
+
+  
