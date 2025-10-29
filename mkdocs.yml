@@ -9,7 +9,7 @@ copyright: Copyright &copy; 2025 João Gaspar
 plugins:
   - tags
   - search
-  #- open-in-new-tab
+  - open-in-new-tab
   - bibtex:
       bib_file: "./docs/refs.bib"
 
