@@ -36,3 +36,13 @@
 | <span id="var_Omega" class="highlight-line">$\Omega$</span> | rad/s | Rotor angular velocity |
 | <span id="var_tauz" class="highlight-line">$\tau_z$</span> | rad/s² | Rotor angular acceleration about its shaft |
 | <span id="var_T" class="highlight-line">$T$</span> | N·m | Rotor propulsive torque |
+| <span id="var_Uinf" class="highlight-line">$U_\infty$</span> | m/s | Freestream velocity |
+| <span id="var_Oi" class="highlight-line">$O^i$</span> | - | Earth inertial frame origin |
+| <span id="var_Or" class="highlight-line">$O^r$</span> | - | Rotor frame origin |
+| <span id="var_x" class="highlight-line">$x$</span> | m | Generic position vector component |
+| <span id="var_xr" class="highlight-line">$x^r$</span> | m | Position vector component in rotor frame |
+| <span id="var_Fgravity" class="highlight-line">$\mathbf{F}_{gravity}$</span> | N | Gravitational force vector |
+| <span id="var_Frotor" class="highlight-line">$\mathbf{F}_{rotor}$</span> | N | Rotor force vector |
+| <span id="var_Oxyz" class="highlight-line">$O_{xyz}$</span> | - | Reference frame axes |
+| <span id="var_m" class="highlight-line">$m$</span> | kg | Mass of the vehicle (alias of $M$) |
+| <span id="var_Identity" class="highlight-line">$\boldsymbol{\mathcal{I}}$</span> | - | Identity matrix |
